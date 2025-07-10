@@ -58,38 +58,6 @@ const currentStudent = {
       amount: 40
     }
   ],
-  homework: [
-    {
-      id: 1,
-      classId: 1,
-      title: 'Conjugación de verbos irregulares',
-      assigned: '2024-03-12',
-      dueDate: '2024-03-15',
-      status: 'Completado',
-      score: 9.0,
-      type: 'Ejercicios'
-    },
-    {
-      id: 2,
-      classId: 1,
-      title: 'Redacción: Mi rutina diaria',
-      assigned: '2024-03-10',
-      dueDate: '2024-03-14',
-      status: 'Pendiente',
-      score: null,
-      type: 'Ensayo'
-    },
-    {
-      id: 3,
-      classId: 2,
-      title: 'Ejercicios de listening',
-      assigned: '2024-03-08',
-      dueDate: '2024-03-16',
-      status: 'Pendiente',
-      score: null,
-      type: 'Audio'
-    }
-  ],
   summaries: [
     {
       id: 1,
@@ -116,8 +84,6 @@ const currentStudent = {
 
 export const StudentProfilePage: React.FC = () => {
   const [imageError, setImageError] = useState(false);
-  const [homework, setHomework] = useState(currentStudent.homework);
-  const { toast } = useToast();
 
   const getInitials = (name: string) => {
     return name
@@ -163,30 +129,6 @@ export const StudentProfilePage: React.FC = () => {
     window.open(currentStudent.nextClass.meetingLink, '_blank');
   };
 
-  const toggleHomeworkStatus = (homeworkId: number) => {
-    setHomework(prev => prev.map(hw => {
-      if (hw.id === homeworkId) {
-        const newStatus = hw.status === 'Completado' ? 'Pendiente' : 'Completado';
-        const newScore = newStatus === 'Completado' ? (hw.score || 8.0) : null;
-        
-        toast({
-          title: newStatus === 'Completado' ? "¡Deber completado!" : "Deber marcado como pendiente",
-          description: `${hw.title} ha sido marcado como ${newStatus.toLowerCase()}`,
-        });
-        
-        return {
-          ...hw,
-          status: newStatus,
-          score: newScore
-        };
-      }
-      return hw;
-    }));
-  };
-
-  const completedHomework = homework.filter(hw => hw.status === 'Completado').length;
-  const pendingHomework = homework.filter(hw => hw.status === 'Pendiente').length;
-
   return (
     <div className="space-y-6">
       {/* Header with Student Info */}
@@ -210,10 +152,9 @@ export const StudentProfilePage: React.FC = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="general">Información General</TabsTrigger>
             <TabsTrigger value="payments">Pagos</TabsTrigger>
-            <TabsTrigger value="homework">Deberes y Resúmenes</TabsTrigger>
           </TabsList>
 
           {/* General Information Tab */}
@@ -273,7 +214,7 @@ export const StudentProfilePage: React.FC = () => {
                 </Card>
                 <Card className="p-6 text-center">
                   <h4 className="text-sm font-medium text-gray-600 mb-2">Tareas</h4>
-                  <p className="text-3xl font-bold text-purple-600">{completedHomework}/{completedHomework + pendingHomework}</p>
+                  <p className="text-3xl font-bold text-purple-600">{currentStudent.homeworkCompleted}/{currentStudent.homeworkCompleted + currentStudent.homeworkPending}</p>
                 </Card>
               </div>
             </div>
@@ -312,126 +253,6 @@ export const StudentProfilePage: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
-            </Card>
-          </TabsContent>
-
-          {/* Homework Tab */}
-          <TabsContent value="homework" className="space-y-6">
-            {/* Homework Section */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Deberes Asignados</h3>
-              <div className="space-y-4">
-                {homework.map((hw) => (
-                  <div key={hw.id} className="p-4 border border-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-semibold text-gray-900">{hw.title}</h4>
-                      <div className="flex items-center gap-3">
-                        <Badge 
-                          variant={hw.status === 'Completado' ? "default" : "destructive"}
-                          className={hw.status === 'Completado' ? "bg-emerald-100 text-emerald-800" : "bg-orange-100 text-orange-800"}
-                        >
-                          {hw.status}
-                        </Badge>
-                        <Button
-                          size="sm"
-                          variant={hw.status === 'Completado' ? "outline" : "default"}
-                          onClick={() => toggleHomeworkStatus(hw.id)}
-                          className={`transition-all duration-200 ${
-                            hw.status === 'Completado' 
-                              ? 'hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200' 
-                              : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                          }`}
-                        >
-                          {hw.status === 'Completado' ? (
-                            <>
-                              <X className="h-4 w-4 mr-1" />
-                              Marcar Pendiente
-                            </>
-                          ) : (
-                            <>
-                              <Check className="h-4 w-4 mr-1" />
-                              Marcar Completado
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm text-gray-600">
-                      <div>
-                        <span className="font-medium">Tipo:</span> {hw.type}
-                      </div>
-                      <div>
-                        <span className="font-medium">Asignado:</span> {new Date(hw.assigned).toLocaleDateString('es-ES')}
-                      </div>
-                      <div>
-                        <span className="font-medium">Vence:</span> {new Date(hw.dueDate).toLocaleDateString('es-ES')}
-                      </div>
-                      <div>
-                        <span className="font-medium">Calificación:</span> {hw.score ? `${hw.score}/10` : 'Pendiente'}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            {/* Progress Summaries */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Resúmenes de Progreso</h3>
-              <div className="space-y-6">
-                {currentStudent.summaries.map((summary) => (
-                  <div key={summary.id} className="border border-gray-200 rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{summary.topic}</h4>
-                        <p className="text-sm text-gray-600">
-                          {new Date(summary.classDate).toLocaleDateString('es-ES')} • {summary.duration}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h5 className="flex items-center gap-2 font-medium text-emerald-700 mb-2">
-                          <CheckCircle2 className="h-4 w-4" />
-                          Logros
-                        </h5>
-                        <ul className="space-y-1">
-                          {summary.achievements.map((achievement, index) => (
-                            <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
-                              <span className="text-emerald-500 mt-1">•</span>
-                              {achievement}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h5 className="flex items-center gap-2 font-medium text-orange-700 mb-2">
-                          <AlertCircle className="h-4 w-4" />
-                          Áreas de Mejora
-                        </h5>
-                        <ul className="space-y-1">
-                          {summary.weaknesses.map((weakness, index) => (
-                            <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
-                              <span className="text-orange-500 mt-1">•</span>
-                              {weakness}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                      <h5 className="flex items-center gap-2 font-medium text-blue-700 mb-1">
-                        <Target className="h-4 w-4" />
-                        Próximo Enfoque
-                      </h5>
-                      <p className="text-sm text-blue-600">{summary.nextFocus}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </Card>
           </TabsContent>
         </Tabs>

@@ -16,6 +16,7 @@ import { SettingsPage } from './pages/teacher/SettingsPage';
 import { BillingPage } from './pages/teacher/BillingPage';
 import { StudentDashboard } from './pages/student/StudentDashboard';
 import { StudentProfilePage } from './pages/student/StudentProfilePage';
+import { StudentHomeworkPage } from './pages/student/StudentHomeworkPage';
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -132,24 +133,10 @@ const App = () => (
                 </ProtectedRoute>
               } />
               
-              <Route path="/student/classes" element={
-                <ProtectedRoute allowedRoles={['student']}>
-                  <DashboardLayout>
-                    <div className="text-center py-12">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Clases</h2>
-                      <p className="text-gray-600">Esta página se implementará próximamente</p>
-                    </div>
-                  </DashboardLayout>
-                </ProtectedRoute>
-              } />
-              
               <Route path="/student/homework" element={
                 <ProtectedRoute allowedRoles={['student']}>
                   <DashboardLayout>
-                    <div className="text-center py-12">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Deberes</h2>
-                      <p className="text-gray-600">Esta página se implementará próximamente</p>
-                    </div>
+                    <StudentHomeworkPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
