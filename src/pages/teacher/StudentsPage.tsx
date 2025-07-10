@@ -407,6 +407,15 @@ export const StudentsPage: React.FC = () => {
     return { totalRevenue, classesPaid, totalClasses, paymentStatus };
   };
 
+  // Calculate classes stats based on Classes context
+  const calculateClassStats = (studentName: string) => {
+    const studentClasses = classes.filter(cls => cls.studentName === studentName);
+    const completedClasses = studentClasses.filter(cls => cls.status === 'Completada').length;
+    const remainingClasses = studentClasses.filter(cls => cls.status === 'Programada').length;
+    
+    return { completedClasses, remainingClasses };
+  };
+
   // Check for student parameter in URL and auto-open modal
   useEffect(() => {
     const studentName = searchParams.get('student');
@@ -931,11 +940,11 @@ export const StudentsPage: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gray-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600">Clases Completadas</p>
-                        <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesCompleted}</p>
+                        <p className="text-2xl font-bold text-gray-900">{calculateClassStats(selectedStudent.name).completedClasses}</p>
                       </div>
                       <div className="bg-blue-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600">Clases Restantes</p>
-                        <p className="text-2xl font-bold text-blue-600">{selectedStudent.classesRemaining}</p>
+                        <p className="text-2xl font-bold text-blue-600">{calculateClassStats(selectedStudent.name).remainingClasses}</p>
                       </div>
                       <div className="bg-purple-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600">Tareas</p>
