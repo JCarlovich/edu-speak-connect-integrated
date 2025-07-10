@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { LoginPage } from './pages/auth/LoginPage';
 import { TeacherDashboard } from './pages/teacher/TeacherDashboard';
+import { StudentsPage } from './pages/teacher/StudentsPage';
 import { StudentDashboard } from './pages/student/StudentDashboard';
 import NotFound from "./pages/NotFound";
 
@@ -65,6 +65,14 @@ const App = () => (
               </ProtectedRoute>
             } />
             
+            <Route path="/students" element={
+              <ProtectedRoute allowedRoles={['teacher']}>
+                <DashboardLayout>
+                  <StudentsPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
+            
             {/* Student Routes */}
             <Route path="/student" element={
               <ProtectedRoute allowedRoles={['student']}>
@@ -75,17 +83,6 @@ const App = () => (
             } />
             
             {/* Placeholder routes for future implementation */}
-            <Route path="/students" element={
-              <ProtectedRoute allowedRoles={['teacher']}>
-                <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Gestión de Estudiantes</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
             <Route path="/classes" element={
               <ProtectedRoute allowedRoles={['teacher']}>
                 <DashboardLayout>

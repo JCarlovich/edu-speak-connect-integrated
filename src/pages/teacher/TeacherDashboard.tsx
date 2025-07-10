@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Users, Calendar, FileText, TrendingUp, Clock, BookOpen } from 'lucide-react';
+import { Users, Calendar, DollarSign, CheckCircle, Clock, BookOpen } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const stats = [
@@ -19,17 +18,17 @@ const stats = [
     color: 'bg-emerald-500',
   },
   {
-    title: 'Transcripciones',
-    value: '156',
-    change: '+18 nuevas',
-    icon: FileText,
+    title: 'Clases Pagadas',
+    value: '8',
+    change: '67% del total',
+    icon: DollarSign,
     color: 'bg-purple-500',
   },
   {
-    title: 'Progreso Promedio',
-    value: '87%',
-    change: '+12% mejora',
-    icon: TrendingUp,
+    title: 'Clases Completadas',
+    value: '156',
+    change: '+18 este mes',
+    icon: CheckCircle,
     color: 'bg-orange-500',
   },
 ];
