@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ClassesProvider } from './contexts/ClassesContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -43,113 +44,115 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            
-            {/* Protected Routes with Dashboard Layout */}
-            <Route path="/" element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Dashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            {/* Teacher Routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute allowedRoles={['teacher']}>
-                <DashboardLayout>
-                  <TeacherDashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/students" element={
-              <ProtectedRoute allowedRoles={['teacher']}>
-                <DashboardLayout>
-                  <StudentsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            {/* Student Routes */}
-            <Route path="/student" element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <DashboardLayout>
-                  <StudentDashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/classes" element={
-              <ProtectedRoute allowedRoles={['teacher']}>
-                <DashboardLayout>
-                  <ClassesPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/transcripts" element={
-              <ProtectedRoute allowedRoles={['teacher']}>
-                <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Transcripciones</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/student/classes" element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Clases</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/student/homework" element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Deberes</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/student/progress" element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Mi Progreso</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/student/materials" element={
-              <ProtectedRoute allowedRoles={['student']}>
-                <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Materiales</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
-                </DashboardLayout>
-              </ProtectedRoute>
-            } />
+        <ClassesProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/login" element={<LoginPage />} />
+              
+              {/* Protected Routes with Dashboard Layout */}
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <DashboardLayout>
+                    <Dashboard />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              {/* Teacher Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <TeacherDashboard />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/students" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <StudentsPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              {/* Student Routes */}
+              <Route path="/student" element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <StudentDashboard />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/classes" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <ClassesPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/transcripts" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <div className="text-center py-12">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Transcripciones</h2>
+                      <p className="text-gray-600">Esta página se implementará próximamente</p>
+                    </div>
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/student/classes" element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <div className="text-center py-12">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Clases</h2>
+                      <p className="text-gray-600">Esta página se implementará próximamente</p>
+                    </div>
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/student/homework" element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <div className="text-center py-12">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Deberes</h2>
+                      <p className="text-gray-600">Esta página se implementará próximamente</p>
+                    </div>
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/student/progress" element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <div className="text-center py-12">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Mi Progreso</h2>
+                      <p className="text-gray-600">Esta página se implementará próximamente</p>
+                    </div>
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/student/materials" element={
+                <ProtectedRoute allowedRoles={['student']}>
+                  <DashboardLayout>
+                    <div className="text-center py-12">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">Mis Materiales</h2>
+                      <p className="text-gray-600">Esta página se implementará próximamente</p>
+                    </div>
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
 
-            {/* Catch all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              {/* Catch all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </ClassesProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

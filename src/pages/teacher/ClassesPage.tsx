@@ -3,80 +3,14 @@ import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-const scheduledClasses = [
-  {
-    id: 1,
-    studentName: 'Ana Martínez',
-    studentAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-    topic: 'Conversación Avanzada',
-    date: '2024-03-15',
-    time: '10:00',
-    duration: '60 min',
-    level: 'Intermedio',
-    status: 'Programada',
-    meetingLink: 'https://meet.google.com/abc-defg-hij',
-    notes: 'Practicar tiempo pasado y vocabulario de viajes'
-  },
-  {
-    id: 2,
-    studentName: 'Carlos López',
-    studentAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-    topic: 'Gramática: Subjuntivo',
-    date: '2024-03-15',
-    time: '14:00',
-    duration: '45 min',
-    level: 'Avanzado',
-    status: 'Programada',
-    meetingLink: 'https://meet.google.com/xyz-abcd-efg',
-    notes: 'Continuar con cláusulas adverbiales'
-  },
-  {
-    id: 3,
-    studentName: 'María González',
-    studentAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-    topic: 'Vocabulario Básico',
-    date: '2024-03-16',
-    time: '09:30',
-    duration: '30 min',
-    level: 'Básico',
-    status: 'Programada',
-    meetingLink: 'https://meet.google.com/hij-klmn-opq',
-    notes: 'Repasar números y colores'
-  },
-  {
-    id: 4,
-    studentName: 'Ana Martínez',
-    studentAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-    topic: 'Práctica de Pronunciación',
-    date: '2024-03-18',
-    time: '11:00',
-    duration: '45 min',
-    level: 'Intermedio',
-    status: 'Programada',
-    meetingLink: 'https://meet.google.com/rst-uvwx-yz1',
-    notes: 'Enfocarse en sonidos difíciles'
-  },
-  {
-    id: 5,
-    studentName: 'Pedro Ruiz',
-    studentAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    topic: 'Clase de Repaso',
-    date: '2024-03-20',
-    time: '16:00',
-    duration: '60 min',
-    level: 'Intermedio',
-    status: 'Pendiente Confirmación',
-    meetingLink: null,
-    notes: 'Evaluación general del progreso'
-  }
-];
+import { useClasses } from '@/contexts/ClassesContext';
 
 export const ClassesPage: React.FC = () => {
+  const { classes } = useClasses();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('Todas');
 
-  const filteredClasses = scheduledClasses.filter(cls => {
+  const filteredClasses = classes.filter(cls => {
     const matchesSearch = cls.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cls.topic.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterStatus === 'Todas' || cls.status === filterStatus;
@@ -106,15 +40,15 @@ export const ClassesPage: React.FC = () => {
     });
   };
 
-  const groupClassesByDate = (classes: typeof scheduledClasses) => {
-    const grouped = classes.reduce((acc, cls) => {
+  const groupClassesByDate = (classesArray: any[]) => {
+    const grouped = classesArray.reduce((acc, cls) => {
       const date = cls.date;
       if (!acc[date]) {
         acc[date] = [];
       }
       acc[date].push(cls);
       return acc;
-    }, {} as Record<string, typeof scheduledClasses>);
+    }, {} as Record<string, any[]>);
 
     // Sort by date
     const sortedDates = Object.keys(grouped).sort();
@@ -192,7 +126,7 @@ export const ClassesPage: React.FC = () => {
                         />
                         <div>
                           <h3 className="font-semibold text-gray-900">{cls.studentName}</h3>
-                          <span className="text-sm text-gray-600">{cls.level}</span>
+                          <span className="text-sm text-gray-600">{cls.studentLevel}</span>
                         </div>
                       </div>
                       <Button variant="ghost" size="sm">
@@ -214,7 +148,7 @@ export const ClassesPage: React.FC = () => {
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          <span>{cls.duration}</span>
+                          <span>{cls.duration} min</span>
                         </div>
                       </div>
                     </div>

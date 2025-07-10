@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useClasses } from '@/contexts/ClassesContext';
 
 const stats = [
   {
@@ -119,6 +120,7 @@ const students = [
 ];
 
 export const TeacherDashboard: React.FC = () => {
+  const { addClass } = useClasses();
   const [showCreateClass, setShowCreateClass] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState('');
   const [classData, setClassData] = useState({
@@ -137,12 +139,23 @@ export const TeacherDashboard: React.FC = () => {
 
   const handleCreateClass = () => {
     const selectedStudentData = students.find(s => s.id === parseInt(selectedStudent));
+    if (!selectedStudentData) return;
+    
     const meetingLink = generateMeetingLink();
     
-    console.log('Nueva clase creada:', {
-      student: selectedStudentData,
-      ...classData,
-      meetingLink
+    // Agregar la clase al contexto
+    addClass({
+      studentName: selectedStudentData.name,
+      studentAvatar: selectedStudentData.avatar,
+      studentEmail: selectedStudentData.email,
+      studentLevel: selectedStudentData.level,
+      topic: classData.topic,
+      date: classData.date,
+      time: classData.time,
+      duration: classData.duration,
+      status: 'Programada',
+      meetingLink: meetingLink,
+      notes: classData.notes || ''
     });
     
     // Resetear formulario
@@ -156,8 +169,8 @@ export const TeacherDashboard: React.FC = () => {
     });
     setShowCreateClass(false);
     
-    // Aquí mostrarías un mensaje de éxito o actualizarías la lista de clases
-    alert(`Clase creada exitosamente para ${selectedStudentData?.name}!\nLink de reunión: ${meetingLink}`);
+    // Mensaje de éxito
+    alert(`Clase creada exitosamente para ${selectedStudentData.name}!\nLink de reunión: ${meetingLink}`);
   };
 
   return (
