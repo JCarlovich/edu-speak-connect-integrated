@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const students = [
   {
@@ -26,9 +27,36 @@ const students = [
     status: 'Activo',
     paymentStatus: 'Al día',
     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    classes: [
+      {
+        id: 1,
+        date: '2024-03-10',
+        topic: 'Pretérito perfecto vs imperfecto',
+        duration: '60 min',
+        paid: true,
+        amount: 40
+      },
+      {
+        id: 2,
+        date: '2024-03-05',
+        topic: 'Conversación libre',
+        duration: '45 min',
+        paid: true,
+        amount: 35
+      },
+      {
+        id: 3,
+        date: '2024-03-01',
+        topic: 'Gramática: ser vs estar',
+        duration: '60 min',
+        paid: false,
+        amount: 40
+      }
+    ],
     homework: [
       {
         id: 1,
+        classId: 1,
         title: 'Conjugación de verbos irregulares',
         assigned: '2024-03-12',
         dueDate: '2024-03-15',
@@ -38,6 +66,7 @@ const students = [
       },
       {
         id: 2,
+        classId: 1,
         title: 'Redacción: Mi rutina diaria',
         assigned: '2024-03-10',
         dueDate: '2024-03-14',
@@ -49,12 +78,23 @@ const students = [
     summaries: [
       {
         id: 1,
+        classId: 1,
         classDate: '2024-03-10',
         topic: 'Pretérito perfecto vs imperfecto',
         duration: '60 min',
         achievements: ['Dominio de conjugaciones básicas', 'Mejora en pronunciación'],
         weaknesses: ['Confusión en usos específicos', 'Velocidad de habla'],
         nextFocus: 'Práctica conversacional con tiempos pasados'
+      },
+      {
+        id: 2,
+        classId: 2,
+        classDate: '2024-03-05',
+        topic: 'Conversación libre',
+        duration: '45 min',
+        achievements: ['Fluidez mejorada', 'Vocabulario más rico'],
+        weaknesses: ['Algunos errores de concordancia'],
+        nextFocus: 'Práctica de concordancia de género y número'
       }
     ]
   },
@@ -77,9 +117,28 @@ const students = [
     status: 'Activo',
     paymentStatus: 'Al día',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    classes: [
+      {
+        id: 1,
+        date: '2024-03-08',
+        topic: 'Subjuntivo en cláusulas nominales',
+        duration: '60 min',
+        paid: true,
+        amount: 45
+      },
+      {
+        id: 2,
+        date: '2024-03-01',
+        topic: 'Literatura española contemporánea',
+        duration: '60 min',
+        paid: true,
+        amount: 45
+      }
+    ],
     homework: [
       {
         id: 1,
+        classId: 1,
         title: 'Análisis de texto literario',
         assigned: '2024-03-08',
         dueDate: '2024-03-14',
@@ -91,6 +150,7 @@ const students = [
     summaries: [
       {
         id: 1,
+        classId: 1,
         classDate: '2024-03-08',
         topic: 'Subjuntivo en cláusulas nominales',
         duration: '60 min',
@@ -119,9 +179,36 @@ const students = [
     status: 'Activo',
     paymentStatus: 'Pendiente',
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+    classes: [
+      {
+        id: 1,
+        date: '2024-03-05',
+        topic: 'Presente simple - tercera persona',
+        duration: '45 min',
+        paid: true,
+        amount: 35
+      },
+      {
+        id: 2,
+        date: '2024-02-28',
+        topic: 'Vocabulario: La familia',
+        duration: '45 min',
+        paid: false,
+        amount: 35
+      },
+      {
+        id: 3,
+        date: '2024-02-25',
+        topic: 'Números y colores',
+        duration: '30 min',
+        paid: false,
+        amount: 25
+      }
+    ],
     homework: [
       {
         id: 1,
+        classId: 1,
         title: 'Vocabulario: La familia',
         assigned: '2024-03-05',
         dueDate: '2024-03-12',
@@ -131,6 +218,7 @@ const students = [
       },
       {
         id: 2,
+        classId: 2,
         title: 'Diálogo en presente simple',
         assigned: '2024-03-03',
         dueDate: '2024-03-10',
@@ -142,6 +230,7 @@ const students = [
     summaries: [
       {
         id: 1,
+        classId: 1,
         classDate: '2024-03-05',
         topic: 'Presente simple - tercera persona',
         duration: '45 min',
@@ -170,10 +259,29 @@ const students = [
     status: 'Inactivo',
     paymentStatus: 'Atrasado',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    classes: [
+      {
+        id: 1,
+        date: '2024-02-28',
+        topic: 'Repaso general - condicionales',
+        duration: '60 min',
+        paid: false,
+        amount: 40
+      },
+      {
+        id: 2,
+        date: '2024-02-20',
+        topic: 'Futuro simple',
+        duration: '60 min',
+        paid: true,
+        amount: 40
+      }
+    ],
     homework: [],
     summaries: [
       {
         id: 1,
+        classId: 1,
         classDate: '2024-02-28',
         topic: 'Repaso general - condicionales',
         duration: '60 min',
@@ -282,14 +390,18 @@ export const StudentsPage: React.FC = () => {
             </div>
 
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <div className="flex justify-between items-center mb-3">
-                <div>
-                  <p className="text-sm text-gray-600">Nivel</p>
+              <div className="grid grid-cols-3 gap-4 mb-3">
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Nivel</p>
                   <p className="font-medium text-gray-900">{student.level}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-600">Clases</p>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Clases</p>
                   <p className="font-medium text-gray-900">{student.classesCompleted}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Tareas</p>
+                  <p className="font-medium text-purple-600">{student.homeworkCompleted}/{student.homeworkCompleted + student.homeworkPending}</p>
                 </div>
               </div>
 
@@ -574,24 +686,42 @@ export const StudentsPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Payment History */}
+                    {/* Classes Payment Table */}
                     <div>
-                      <h4 className="text-md font-semibold text-gray-900 mb-4">Historial de Pagos</h4>
-                      <div className="space-y-3">
-                        {Array.from({ length: 3 }, (_, i) => (
-                          <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
-                            <div>
-                              <p className="font-medium text-gray-900">Pago por 4 clases</p>
-                              <p className="text-sm text-gray-600">{new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000).toLocaleDateString("es-ES")}</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-bold text-emerald-600">€{120 - i * 10}</p>
-                              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                                Completado
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                      <h4 className="text-md font-semibold text-gray-900 mb-4">Estado de Pagos por Clase</h4>
+                      <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Fecha</TableHead>
+                              <TableHead>Tema</TableHead>
+                              <TableHead>Duración</TableHead>
+                              <TableHead>Monto</TableHead>
+                              <TableHead>Estado</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {selectedStudent.classes && selectedStudent.classes.map((cls: any) => (
+                              <TableRow key={cls.id}>
+                                <TableCell className="font-medium">
+                                  {new Date(cls.date).toLocaleDateString("es-ES")}
+                                </TableCell>
+                                <TableCell>{cls.topic}</TableCell>
+                                <TableCell>{cls.duration}</TableCell>
+                                <TableCell className="font-medium">€{cls.amount}</TableCell>
+                                <TableCell>
+                                  <span className={`px-2 py-1 text-xs rounded-full ${
+                                    cls.paid 
+                                      ? "bg-emerald-100 text-emerald-700"
+                                      : "bg-red-100 text-red-700"
+                                  }`}>
+                                    {cls.paid ? "Pagado" : "Pendiente"}
+                                  </span>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
                       </div>
                     </div>
                   </div>
@@ -599,108 +729,123 @@ export const StudentsPage: React.FC = () => {
 
                 {/* Homework & Summaries Tab */}
                 <TabsContent value="homework" className="mt-6">
-                  <div className="space-y-8">
-                    {/* Homework Section */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Deberes</h3>
-                      {selectedStudent.homework && selectedStudent.homework.length > 0 ? (
-                        <div className="space-y-4">
-                          {selectedStudent.homework.map((hw: any) => (
-                            <div key={hw.id} className="p-4 border border-gray-200 rounded-lg">
-                              <div className="flex items-start justify-between mb-3">
-                                <div>
-                                  <h4 className="font-medium text-gray-900">{hw.title}</h4>
-                                  <p className="text-sm text-gray-600">{hw.type}</p>
-                                </div>
-                                <span className={`px-2 py-1 text-xs rounded-full ${
-                                  hw.status === "Completado" 
-                                    ? "bg-emerald-100 text-emerald-700"
-                                    : hw.status === "En progreso"
-                                    ? "bg-blue-100 text-blue-700"
-                                    : "bg-yellow-100 text-yellow-700"
-                                }`}>
-                                  {hw.status}
-                                </span>
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                  <p className="text-gray-600">Asignado: {new Date(hw.assigned).toLocaleDateString("es-ES")}</p>
-                                  <p className="text-gray-600">Fecha límite: {new Date(hw.dueDate).toLocaleDateString("es-ES")}</p>
-                                </div>
-                                <div className="text-right">
-                                  {hw.score && (
-                                    <div className="flex items-center justify-end gap-1">
-                                      {hw.score >= 8 ? (
-                                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                                      ) : (
-                                        <AlertCircle className="h-4 w-4 text-yellow-500" />
-                                      )}
-                                      <span className="font-medium">Nota: {hw.score}/10</span>
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Clases, Deberes y Resúmenes</h3>
+                    
+                    {selectedStudent.classes && selectedStudent.classes.length > 0 ? (
+                      <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Fecha de Clase</TableHead>
+                              <TableHead>Tema</TableHead>
+                              <TableHead>Deberes</TableHead>
+                              <TableHead>Resumen</TableHead>
+                              <TableHead>Estado</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {selectedStudent.classes.map((cls: any) => {
+                              const classHomework = selectedStudent.homework?.filter((hw: any) => hw.classId === cls.id) || [];
+                              const classSummary = selectedStudent.summaries?.find((s: any) => s.classId === cls.id);
+                              
+                              return (
+                                <TableRow key={cls.id}>
+                                  <TableCell className="font-medium">
+                                    {new Date(cls.date).toLocaleDateString("es-ES")}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div>
+                                      <p className="font-medium">{cls.topic}</p>
+                                      <p className="text-sm text-gray-500">{cls.duration}</p>
                                     </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-gray-600 text-center py-8">No hay deberes asignados</p>
-                      )}
-                    </div>
+                                  </TableCell>
+                                  <TableCell>
+                                    {classHomework.length > 0 ? (
+                                      <div className="space-y-1">
+                                        {classHomework.map((hw: any) => (
+                                          <div key={hw.id} className="text-sm">
+                                            <div className="flex items-center gap-2">
+                                              <span className="font-medium">{hw.title}</span>
+                                              {hw.status === "Completado" ? (
+                                                <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                                              ) : hw.status === "En progreso" ? (
+                                                <Clock className="h-3 w-3 text-blue-500" />
+                                              ) : (
+                                                <AlertCircle className="h-3 w-3 text-yellow-500" />
+                                              )}
+                                            </div>
+                                            <p className="text-gray-500">{hw.type}</p>
+                                            {hw.score && (
+                                              <p className="text-emerald-600 font-medium">Nota: {hw.score}/10</p>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <span className="text-gray-500 text-sm">Sin deberes</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {classSummary ? (
+                                      <div className="text-sm">
+                                        <div className="mb-2">
+                                          <span className="text-emerald-600 font-medium">
+                                            {classSummary.achievements.length} logros
+                                          </span>
+                                          {" • "}
+                                          <span className="text-orange-600 font-medium">
+                                            {classSummary.weaknesses.length} mejoras
+                                          </span>
+                                        </div>
+                                        <div className="p-2 bg-blue-50 rounded text-blue-700">
+                                          <p className="font-medium text-xs">Próximo enfoque:</p>
+                                          <p className="text-xs">{classSummary.nextFocus}</p>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <span className="text-gray-500 text-sm">Sin resumen</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    <span className={`px-2 py-1 text-xs rounded-full ${
+                                      cls.paid 
+                                        ? "bg-emerald-100 text-emerald-700"
+                                        : "bg-red-100 text-red-700"
+                                    }`}>
+                                      {cls.paid ? "Pagado" : "Pendiente"}
+                                    </span>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    ) : (
+                      <p className="text-gray-600 text-center py-8">No hay clases registradas</p>
+                    )}
 
-                    {/* Class Summaries Section */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Resúmenes de Clases</h3>
-                      {selectedStudent.summaries && selectedStudent.summaries.length > 0 ? (
-                        <div className="space-y-6">
-                          {selectedStudent.summaries.map((summary: any) => (
-                            <div key={summary.id} className="p-6 border border-gray-200 rounded-lg">
-                              <div className="flex items-start justify-between mb-4">
-                                <div>
-                                  <h4 className="font-medium text-gray-900 text-lg">{summary.topic}</h4>
-                                  <p className="text-sm text-gray-600">
-                                    {new Date(summary.classDate).toLocaleDateString("es-ES")} • {summary.duration}
-                                  </p>
-                                </div>
-                                <FileText className="h-5 w-5 text-gray-400" />
-                              </div>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                  <h5 className="font-medium text-emerald-700 mb-2 flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4" />
-                                    Logros
-                                  </h5>
-                                  <ul className="space-y-1">
-                                    {summary.achievements.map((achievement: string, index: number) => (
-                                      <li key={index} className="text-sm text-gray-700">• {achievement}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                                
-                                <div>
-                                  <h5 className="font-medium text-orange-700 mb-2 flex items-center gap-2">
-                                    <AlertCircle className="h-4 w-4" />
-                                    Áreas de Mejora
-                                  </h5>
-                                  <ul className="space-y-1">
-                                    {summary.weaknesses.map((weakness: string, index: number) => (
-                                      <li key={index} className="text-sm text-gray-700">• {weakness}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                              
-                              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                                <h5 className="font-medium text-blue-700 mb-1">Próximo Enfoque</h5>
-                                <p className="text-sm text-blue-600">{summary.nextFocus}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-gray-600 text-center py-8">No hay resúmenes de clases disponibles</p>
-                      )}
+                    {/* Quick Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                      <div className="bg-purple-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-purple-600">Total Deberes</p>
+                        <p className="text-2xl font-bold text-purple-700">
+                          {selectedStudent.homework?.length || 0}
+                        </p>
+                      </div>
+                      <div className="bg-emerald-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-emerald-600">Deberes Completados</p>
+                        <p className="text-2xl font-bold text-emerald-700">
+                          {selectedStudent.homework?.filter((hw: any) => hw.status === "Completado").length || 0}
+                        </p>
+                      </div>
+                      <div className="bg-blue-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-blue-600">Resúmenes Disponibles</p>
+                        <p className="text-2xl font-bold text-blue-700">
+                          {selectedStudent.summaries?.length || 0}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>
