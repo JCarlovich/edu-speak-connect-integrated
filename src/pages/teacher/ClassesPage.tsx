@@ -296,10 +296,11 @@ export const ClassesPage: React.FC = () => {
                             </Button>
                             <Button 
                               variant="outline"
-                              className="px-4 bg-white/90 hover:bg-white border-emerald-200 hover:border-emerald-300 text-emerald-600 rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                              className="bg-white/90 hover:bg-white border-emerald-200 hover:border-emerald-300 text-emerald-600 rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300 px-4"
                               onClick={() => copyToClipboard(cls.meetingLink)}
                             >
-                              <Copy className="h-5 w-5" />
+                              <Link className="h-4 w-4 mr-2" />
+                              Copiar Link
                             </Button>
                           </>
                         ) : (
