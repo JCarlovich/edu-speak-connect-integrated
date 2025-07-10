@@ -135,6 +135,58 @@ export const ClassesPage: React.FC = () => {
     }
   };
 
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .slice(0, 2)
+      .join('');
+  };
+
+  // Avatar component with fallback to initials
+  const StudentAvatar = ({ student }: { student: any }) => {
+    const [imageError, setImageError] = useState(false);
+    
+    if (!student.studentAvatar || imageError) {
+      const initials = getInitials(student.studentName);
+      const colors = [
+        'from-blue-400 to-blue-600',
+        'from-purple-400 to-purple-600', 
+        'from-pink-400 to-pink-600',
+        'from-green-400 to-green-600',
+        'from-orange-400 to-orange-600',
+        'from-red-400 to-red-600',
+        'from-indigo-400 to-indigo-600',
+        'from-teal-400 to-teal-600'
+      ];
+      
+      // Use name hash to consistently pick same color for same student
+      const colorIndex = student.studentName.length % colors.length;
+      const gradientClass = colors[colorIndex];
+      
+      return (
+        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradientClass} flex items-center justify-center ring-2 ring-white shadow-md`}>
+          <span className="text-white font-bold text-lg">{initials}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative">
+        <img
+          src={student.studentAvatar}
+          alt={student.studentName}
+          className="w-14 h-14 rounded-2xl object-cover ring-2 ring-white shadow-md"
+          onError={() => setImageError(true)}
+        />
+        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full flex items-center justify-center">
+          <User className="h-3 w-3 text-white" />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
       {/* Header */}
@@ -202,18 +254,9 @@ export const ClassesPage: React.FC = () => {
                     <div className="relative p-8">
                       {/* Header */}
                       <div className="flex items-start justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <img
-                              src={cls.studentAvatar}
-                              alt={cls.studentName}
-                              className="w-14 h-14 rounded-2xl object-cover ring-2 ring-white shadow-md"
-                            />
-                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full flex items-center justify-center">
-                              <User className="h-3 w-3 text-white" />
-                            </div>
-                          </div>
-                          <div>
+                         <div className="flex items-center gap-4">
+                           <StudentAvatar student={cls} />
+                           <div>
                             <h3 
                               className="font-bold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors text-lg"
                               onClick={() => navigate(`/students?student=${encodeURIComponent(cls.studentName)}`)}
