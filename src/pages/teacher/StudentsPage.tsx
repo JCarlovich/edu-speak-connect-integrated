@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock, FileText, CheckCircle2, AlertCircle, CalendarIcon } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock, FileText, CheckCircle2, AlertCircle, CalendarIcon, Users, User, UserCheck, CheckCircle, BarChart, CircleDollarSign, Euro, Filter } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -304,6 +304,7 @@ export const StudentsPage: React.FC = () => {
   const { addClass, updateClass, classes } = useClasses();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('Todos');
   const [showAddStudent, setShowAddStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
   
@@ -322,6 +323,17 @@ export const StudentsPage: React.FC = () => {
     duration: '60',
     notes: ''
   });
+
+  // Calculate KPIs
+  const activeStudents = students.filter(student => student.status === 'Activo').length;
+  
+  const averageProgress = students.reduce((acc, student) => {
+    return acc + student.averageScore;
+  }, 0) / students.length;
+  
+  const totalRevenue = students.reduce((acc, student) => {
+    return acc + student.totalRevenue;
+  }, 0);
 
   // Generar opciones de hora (00:00 a 23:00)
   const timeOptions = Array.from({ length: 24 }, (_, i) => {
@@ -532,92 +544,191 @@ export const StudentsPage: React.FC = () => {
     }
   }, [searchParams]);
 
-  const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredStudents = students.filter(student => {
+    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         student.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterStatus === 'Todos' || student.status === filterStatus;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Gestión de Estudiantes
-          </h1>
-          <p className="text-gray-600">
-            Administra tu lista de estudiantes y su información
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Gestión de Estudiantes</h1>
+          <p className="text-gray-600">Administra tu lista de estudiantes y su información</p>
         </div>
         <Button 
+          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-6 py-3"
           onClick={() => setShowAddStudent(true)}
-          className="bg-blue-500 hover:bg-blue-600"
         >
           <Plus className="h-4 w-4 mr-2" />
           Agregar Estudiante
         </Button>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          type="text"
-          placeholder="Buscar estudiantes por nombre o email..."
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* KPIs Section */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <Users className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-blue-100 text-sm font-medium mb-1">Total Estudiantes</p>
+              <p className="text-3xl font-bold">{students.length}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <User className="h-4 w-4 text-blue-200" />
+                <span className="text-blue-100 text-xs">Activos e inactivos</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <UserCheck className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-emerald-100 text-sm font-medium mb-1">Estudiantes Activos</p>
+              <p className="text-3xl font-bold">{activeStudents}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <CheckCircle className="h-4 w-4 text-emerald-200" />
+                <span className="text-emerald-100 text-xs">Con clases regulares</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <TrendingUp className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-purple-100 text-sm font-medium mb-1">Promedio Progreso</p>
+              <p className="text-3xl font-bold">{averageProgress.toFixed(1)}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <BarChart className="h-4 w-4 text-purple-200" />
+                <span className="text-purple-100 text-xs">Nivel general</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <CircleDollarSign className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-orange-100 text-sm font-medium mb-1">Ingresos Totales</p>
+              <p className="text-3xl font-bold">€{totalRevenue}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <Euro className="h-4 w-4 text-orange-200" />
+                <span className="text-orange-100 text-xs">Facturación total</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Buscar estudiantes por nombre o email..."
+              className="pl-12 h-12 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <Filter className="h-5 w-5 text-gray-400" />
+            <select 
+              className="px-4 py-3 border border-gray-200 rounded-xl bg-white/90 hover:border-blue-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all min-w-[140px]"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="Todos">Todos</option>
+              <option value="Activo">Activos</option>
+              <option value="Inactivo">Inactivos</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Students Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredStudents.map((student) => (
-           <Card 
+          <Card 
             key={student.id} 
-            className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+            className="group relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-3xl border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-white/90 cursor-pointer"
             onClick={() => setSelectedStudent(student)}
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <StudentAvatar student={student} size="sm" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">{student.name}</h3>
-                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                    student.status === 'Activo' 
-                      ? 'bg-emerald-100 text-emerald-700' 
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
-                    {student.status}
-                  </span>
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <div className="relative p-6">
+              {/* Header with Avatar and Status */}
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <StudentAvatar student={student} size="md" />
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-700 transition-colors">
+                      {student.name}
+                    </h3>
+                    <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full ${
+                      student.status === 'Activo' 
+                        ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' 
+                        : 'bg-gray-100 text-gray-600 border border-gray-200'
+                    }`}>
+                      <div className={`w-2 h-2 rounded-full mr-2 ${
+                        student.status === 'Activo' ? 'bg-emerald-500' : 'bg-gray-400'
+                      }`} />
+                      {student.status}
+                    </span>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-blue-50"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Aquí iría el menú de opciones
+                  }}
+                >
+                  <MoreVertical className="h-4 w-4 text-gray-400 hover:text-blue-600" />
+                </Button>
+              </div>
+
+              {/* Contact Info */}
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                    <Mail className="h-4 w-4 text-blue-500" />
+                  </div>
+                  <span className="text-sm">{student.email}</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-green-600 transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+                    <Phone className="h-4 w-4 text-green-500" />
+                  </div>
+                  <span className="text-sm">{student.phone}</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-purple-600 transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                    <Calendar className="h-4 w-4 text-purple-500" />
+                  </div>
+                  <span className="text-sm">Desde: {new Date(student.joinDate).toLocaleDateString('es-ES')}</span>
                 </div>
               </div>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Aquí iría el menú de opciones
-                }}
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="space-y-2 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span>{student.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                <span>{student.phone}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                <span>Desde: {new Date(student.joinDate).toLocaleDateString('es-ES')}</span>
-              </div>
-            </div>
 
             <div className="mt-4 pt-4 border-t border-gray-100">
               <div className="grid grid-cols-3 gap-4 mb-3">
@@ -662,6 +773,7 @@ export const StudentsPage: React.FC = () => {
                   </div>
                 );
               })()}
+            </div>
             </div>
           </Card>
         ))}
