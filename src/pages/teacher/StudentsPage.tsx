@@ -478,8 +478,16 @@ export const StudentsPage: React.FC = () => {
   // Calculate next scheduled class for a student
   const getNextClass = (studentName: string) => {
     const today = new Date();
-    console.log('Fecha actual:', today);
+    console.log('=== DEBUG getNextClass ===');
+    console.log('Fecha actual:', today.toISOString());
     console.log('Buscando próxima clase para:', studentName);
+    console.log('Total clases disponibles:', classes.length);
+    
+    // Log all classes for debugging
+    classes.forEach(cls => {
+      const classDate = new Date(cls.date);
+      console.log(`Clase completa: ${cls.studentName} - ${cls.date} - ${cls.status} - ¿Futura?: ${classDate >= today}`);
+    });
     
     const studentClasses = classes.filter(cls => {
       const classDate = new Date(cls.date);
@@ -487,14 +495,17 @@ export const StudentsPage: React.FC = () => {
       const isScheduled = cls.status === 'Programada';
       const isFuture = classDate >= today;
       
-      console.log(`Clase: ${cls.studentName} - ${cls.date} - Status: ${cls.status} - ¿Futura?: ${isFuture}`);
+      console.log(`Evaluando: ${cls.studentName} === ${studentName}? ${nameMatch}, Status: ${cls.status} === 'Programada'? ${isScheduled}, Date: ${cls.date} >= ${today.toDateString()}? ${isFuture}`);
       
       return nameMatch && isScheduled && isFuture;
     });
     
     console.log('Clases filtradas para', studentName, ':', studentClasses);
     
-    if (studentClasses.length === 0) return null;
+    if (studentClasses.length === 0) {
+      console.log('No hay clases futuras programadas para', studentName);
+      return null;
+    }
     
     // Sort by date and time to get the nearest one
     const sortedClasses = studentClasses.sort((a, b) => {
@@ -504,6 +515,7 @@ export const StudentsPage: React.FC = () => {
     });
     
     console.log('Próxima clase encontrada:', sortedClasses[0]);
+    console.log('=== FIN DEBUG ===');
     return sortedClasses[0];
   };
 
