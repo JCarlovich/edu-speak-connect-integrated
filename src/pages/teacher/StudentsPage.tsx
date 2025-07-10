@@ -583,7 +583,7 @@ export const StudentsPage: React.FC = () => {
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500">Clases</p>
-                  <p className="font-medium text-gray-900">{student.classesCompleted}</p>
+                  <p className="font-medium text-gray-900">{calculateClassStats(student.name).completedClasses}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-gray-500">Tareas</p>
