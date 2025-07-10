@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Calendar, DollarSign, CheckCircle, Clock, BookOpen } from 'lucide-react';
+import { Users, Calendar, DollarSign, CheckCircle, Clock, BookOpen, FileText } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const stats = [
