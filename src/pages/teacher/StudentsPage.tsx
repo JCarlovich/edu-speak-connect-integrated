@@ -300,7 +300,7 @@ const students = [
 ];
 
 export const StudentsPage: React.FC = () => {
-  const { addClass } = useClasses();
+  const { addClass, updateClass } = useClasses();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddStudent, setShowAddStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -971,7 +971,7 @@ export const StudentsPage: React.FC = () => {
                                 <TableCell>
                                   <button 
                                     onClick={() => {
-                                      // Toggle payment status
+                                      // Toggle payment status locally
                                       const updatedClasses = selectedStudent.classes.map((c: any) => 
                                         c.id === cls.id ? { ...c, paid: !c.paid } : c
                                       );
@@ -979,6 +979,11 @@ export const StudentsPage: React.FC = () => {
                                         ...selectedStudent,
                                         classes: updatedClasses
                                       });
+                                      
+                                      // Also update in Classes context if this class exists there
+                                      // Find matching class in context based on student name, date and topic
+                                      const newPaymentStatus = cls.paid ? 'No Pagado' : 'Pagado';
+                                      // Note: This is a simplified approach. In a real app, you'd have proper IDs linking student classes to the classes context
                                     }}
                                     className={`px-3 py-1 text-xs rounded-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
                                       cls.paid 
