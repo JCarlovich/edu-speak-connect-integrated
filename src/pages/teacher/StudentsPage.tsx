@@ -614,7 +614,7 @@ export const StudentsPage: React.FC = () => {
                   {/* Statistics */}
                   <div className="mb-8">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Estadísticas</h3>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gray-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600">Clases Completadas</p>
                         <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesCompleted}</p>
@@ -622,13 +622,6 @@ export const StudentsPage: React.FC = () => {
                       <div className="bg-blue-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600">Clases Restantes</p>
                         <p className="text-2xl font-bold text-blue-600">{selectedStudent.classesRemaining}</p>
-                      </div>
-                      <div className="bg-emerald-50 p-4 rounded-lg text-center">
-                        <p className="text-sm text-gray-600">Promedio</p>
-                        <div className="flex items-center justify-center gap-1">
-                          <TrendingUp className="h-4 w-4 text-emerald-500" />
-                          <p className="text-2xl font-bold text-emerald-600">{selectedStudent.averageScore}</p>
-                        </div>
                       </div>
                       <div className="bg-purple-50 p-4 rounded-lg text-center">
                         <p className="text-sm text-gray-600">Tareas</p>
@@ -741,7 +734,6 @@ export const StudentsPage: React.FC = () => {
                               <TableHead>Tema</TableHead>
                               <TableHead>Deberes</TableHead>
                               <TableHead>Resumen</TableHead>
-                              <TableHead>Estado</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -789,15 +781,6 @@ export const StudentsPage: React.FC = () => {
                                   <TableCell>
                                     {classSummary ? (
                                       <div className="text-sm">
-                                        <div className="mb-2">
-                                          <span className="text-emerald-600 font-medium">
-                                            {classSummary.achievements.length} logros
-                                          </span>
-                                          {" • "}
-                                          <span className="text-orange-600 font-medium">
-                                            {classSummary.weaknesses.length} mejoras
-                                          </span>
-                                        </div>
                                         <div className="p-2 bg-blue-50 rounded text-blue-700">
                                           <p className="font-medium text-xs">Próximo enfoque:</p>
                                           <p className="text-xs">{classSummary.nextFocus}</p>
@@ -806,15 +789,6 @@ export const StudentsPage: React.FC = () => {
                                     ) : (
                                       <span className="text-gray-500 text-sm">Sin resumen</span>
                                     )}
-                                  </TableCell>
-                                  <TableCell>
-                                    <span className={`px-2 py-1 text-xs rounded-full ${
-                                      cls.paid 
-                                        ? "bg-emerald-100 text-emerald-700"
-                                        : "bg-red-100 text-red-700"
-                                    }`}>
-                                      {cls.paid ? "Pagado" : "Pendiente"}
-                                    </span>
                                   </TableCell>
                                 </TableRow>
                               );
