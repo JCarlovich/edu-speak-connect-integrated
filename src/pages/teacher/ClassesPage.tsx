@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useClasses } from '@/contexts/ClassesContext';
+import { useNavigate } from 'react-router-dom';
 
 export const ClassesPage: React.FC = () => {
   const { classes, updateClass } = useClasses();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('Todas');
 
@@ -137,7 +139,12 @@ export const ClassesPage: React.FC = () => {
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
-                          <h3 className="font-semibold text-gray-900">{cls.studentName}</h3>
+                          <h3 
+                            className="font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors"
+                            onClick={() => navigate(`/students?student=${encodeURIComponent(cls.studentName)}`)}
+                          >
+                            {cls.studentName}
+                          </h3>
                           <span className="text-sm text-gray-600">{cls.studentLevel}</span>
                         </div>
                       </div>

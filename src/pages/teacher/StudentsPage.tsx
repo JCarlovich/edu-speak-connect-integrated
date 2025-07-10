@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock, FileText, CheckCircle2, AlertCircle, CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { useSearchParams } from 'react-router-dom';
 
 const students = [
   {
@@ -301,6 +302,7 @@ const students = [
 
 export const StudentsPage: React.FC = () => {
   const { addClass, updateClass, classes } = useClasses();
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddStudent, setShowAddStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -386,6 +388,19 @@ export const StudentsPage: React.FC = () => {
     setCreateClassToo(false);
     setShowAddStudent(false);
   };
+
+  // Check for student parameter in URL and auto-open modal
+  useEffect(() => {
+    const studentName = searchParams.get('student');
+    if (studentName) {
+      const foundStudent = students.find(student => 
+        student.name === decodeURIComponent(studentName)
+      );
+      if (foundStudent) {
+        setSelectedStudent(foundStudent);
+      }
+    }
+  }, [searchParams]);
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
