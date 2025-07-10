@@ -1,23 +1,72 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useClasses } from '@/contexts/ClassesContext';
 import { useNavigate } from 'react-router-dom';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export const ClassesPage: React.FC = () => {
-  const { classes, updateClass } = useClasses();
+  const { classes, updateClass, addClass } = useClasses();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('Todas');
+  const [showNewClassModal, setShowNewClassModal] = useState(false);
+  const [newClassData, setNewClassData] = useState({
+    studentName: '',
+    studentEmail: '',
+    studentAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    studentLevel: 'Básico',
+    topic: '',
+    date: '',
+    time: '',
+    duration: '60',
+    status: 'Programada',
+    paymentStatus: 'No Pagado',
+    meetingLink: '',
+    notes: ''
+  });
 
   const filteredClasses = classes.filter(cls => {
     const matchesSearch = cls.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          cls.topic.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = filterStatus === 'Todas' || cls.status === filterStatus;
     return matchesSearch && matchesFilter;
+  });
+
+  const handleAddClass = () => {
+    const newClass = {
+      ...newClassData,
+      meetingLink: newClassData.meetingLink || `https://meet.google.com/${Math.random().toString(36).substring(2, 15)}`
+    };
+    
+    addClass(newClass);
+    
+    // Reset form
+    setNewClassData({
+      studentName: '',
+      studentEmail: '',
+      studentAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      studentLevel: 'Básico',
+      topic: '',
+      date: '',
+      time: '',
+      duration: '60',
+      status: 'Programada',
+      paymentStatus: 'No Pagado',
+      meetingLink: '',
+      notes: ''
+    });
+    
+    setShowNewClassModal(false);
+  };
+
+  const timeOptions = Array.from({ length: 24 }, (_, i) => {
+    const hour = i.toString().padStart(2, '0');
+    return { value: `${hour}:00`, label: `${hour}:00` };
   });
 
   const getStatusColor = (status: string) => {
@@ -86,7 +135,10 @@ export const ClassesPage: React.FC = () => {
             Gestiona todas tus clases programadas y próximas sesiones
           </p>
         </div>
-        <Button className="bg-blue-500 hover:bg-blue-600">
+        <Button 
+          className="bg-blue-500 hover:bg-blue-600"
+          onClick={() => setShowNewClassModal(true)}
+        >
           <Plus className="h-4 w-4 mr-2" />
           Nueva Clase
         </Button>
@@ -245,13 +297,178 @@ export const ClassesPage: React.FC = () => {
                 : 'Comienza programando tu primera clase'
               }
             </p>
-            <Button className="bg-blue-500 hover:bg-blue-600">
+            <Button 
+              className="bg-blue-500 hover:bg-blue-600"
+              onClick={() => setShowNewClassModal(true)}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Nueva Clase
             </Button>
           </div>
         )}
       </div>
+
+      {/* New Class Modal */}
+      {showNewClassModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Nueva Clase</h2>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setShowNewClassModal(false)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {/* Form */}
+              <div className="space-y-4">
+                {/* Student Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="studentName">Nombre del Estudiante</Label>
+                    <Input
+                      id="studentName"
+                      value={newClassData.studentName}
+                      onChange={(e) => setNewClassData({...newClassData, studentName: e.target.value})}
+                      placeholder="Nombre completo"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="studentEmail">Email del Estudiante</Label>
+                    <Input
+                      id="studentEmail"
+                      type="email"
+                      value={newClassData.studentEmail}
+                      onChange={(e) => setNewClassData({...newClassData, studentEmail: e.target.value})}
+                      placeholder="email@ejemplo.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="studentLevel">Nivel</Label>
+                  <Select 
+                    value={newClassData.studentLevel} 
+                    onValueChange={(value) => setNewClassData({...newClassData, studentLevel: value})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Básico">Básico</SelectItem>
+                      <SelectItem value="Intermedio">Intermedio</SelectItem>
+                      <SelectItem value="Avanzado">Avanzado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Class Details */}
+                <div>
+                  <Label htmlFor="topic">Tema de la Clase</Label>
+                  <Input
+                    id="topic"
+                    value={newClassData.topic}
+                    onChange={(e) => setNewClassData({...newClassData, topic: e.target.value})}
+                    placeholder="Ej: Conversación Avanzada, Gramática, etc."
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="date">Fecha</Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={newClassData.date}
+                      onChange={(e) => setNewClassData({...newClassData, date: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="time">Hora</Label>
+                    <Select 
+                      value={newClassData.time} 
+                      onValueChange={(value) => setNewClassData({...newClassData, time: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar hora" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {timeOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="duration">Duración (min)</Label>
+                    <Select 
+                      value={newClassData.duration} 
+                      onValueChange={(value) => setNewClassData({...newClassData, duration: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="30">30 minutos</SelectItem>
+                        <SelectItem value="45">45 minutos</SelectItem>
+                        <SelectItem value="60">60 minutos</SelectItem>
+                        <SelectItem value="90">90 minutos</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="meetingLink">Enlace de Reunión (opcional)</Label>
+                  <Input
+                    id="meetingLink"
+                    value={newClassData.meetingLink}
+                    onChange={(e) => setNewClassData({...newClassData, meetingLink: e.target.value})}
+                    placeholder="https://meet.google.com/..."
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="notes">Notas</Label>
+                  <Textarea
+                    id="notes"
+                    value={newClassData.notes}
+                    onChange={(e) => setNewClassData({...newClassData, notes: e.target.value})}
+                    placeholder="Notas adicionales sobre la clase..."
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2 mt-6">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => setShowNewClassModal(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  className="flex-1 bg-blue-500 hover:bg-blue-600"
+                  onClick={handleAddClass}
+                  disabled={!newClassData.studentName || !newClassData.topic || !newClassData.date || !newClassData.time}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Crear Clase
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
