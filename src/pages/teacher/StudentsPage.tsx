@@ -300,7 +300,7 @@ const students = [
 ];
 
 export const StudentsPage: React.FC = () => {
-  const { addClass, updateClass } = useClasses();
+  const { addClass, updateClass, classes } = useClasses();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddStudent, setShowAddStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
@@ -329,6 +329,21 @@ export const StudentsPage: React.FC = () => {
       label: `${hour}:00`
     };
   });
+
+  
+  // Function to find and update corresponding class in context
+  const updatePaymentInContext = (studentName: string, classDate: string, classTopic: string, newPaymentStatus: string) => {
+    // Find the corresponding class in the context
+    const matchingClass = classes.find(contextClass => 
+      contextClass.studentName === studentName &&
+      contextClass.date === classDate &&
+      contextClass.topic === classTopic
+    );
+    
+    if (matchingClass) {
+      updateClass(matchingClass.id, { paymentStatus: newPaymentStatus });
+    }
+  };
 
   const generateMeetingLink = () => {
     const randomId = Math.random().toString(36).substring(2, 15);
@@ -980,10 +995,14 @@ export const StudentsPage: React.FC = () => {
                                         classes: updatedClasses
                                       });
                                       
-                                      // Also update in Classes context if this class exists there
-                                      // Find matching class in context based on student name, date and topic
+                                      // Sync with Classes context
                                       const newPaymentStatus = cls.paid ? 'No Pagado' : 'Pagado';
-                                      // Note: This is a simplified approach. In a real app, you'd have proper IDs linking student classes to the classes context
+                                      updatePaymentInContext(
+                                        selectedStudent.name, 
+                                        cls.date, 
+                                        cls.topic, 
+                                        newPaymentStatus
+                                      );
                                     }}
                                     className={`px-3 py-1 text-xs rounded-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
                                       cls.paid 
