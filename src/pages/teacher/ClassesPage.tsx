@@ -187,6 +187,51 @@ export const ClassesPage: React.FC = () => {
     );
   };
 
+  // Calculate KPIs
+  const calculateKPIs = () => {
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+    
+    // Start of week (Monday)
+    const startOfWeek = new Date(today);
+    const day = startOfWeek.getDay();
+    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
+    startOfWeek.setDate(diff);
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    // End of week (Sunday)
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+    
+    // Start of month
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    // End of month
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    endOfMonth.setHours(23, 59, 59, 999);
+    
+    const classesToday = classes.filter(cls => cls.date === todayStr).length;
+    
+    const classesThisWeek = classes.filter(cls => {
+      const classDate = new Date(cls.date);
+      return classDate >= startOfWeek && classDate <= endOfWeek;
+    }).length;
+    
+    const classesThisMonth = classes.filter(cls => {
+      const classDate = new Date(cls.date);
+      return classDate >= startOfMonth && classDate <= endOfMonth;
+    }).length;
+    
+    return {
+      today: classesToday,
+      week: classesThisWeek,
+      month: classesThisMonth
+    };
+  };
+
+  const kpis = calculateKPIs();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
       {/* Header */}
@@ -206,6 +251,57 @@ export const ClassesPage: React.FC = () => {
           <Plus className="h-4 w-4 mr-2" />
           Nueva Clase
         </Button>
+      </div>
+
+      {/* KPIs Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <Calendar className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-blue-100 text-sm font-medium mb-1">Clases Hoy</p>
+              <p className="text-3xl font-bold">{kpis.today}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <Clock className="h-4 w-4 text-blue-200" />
+                <span className="text-blue-100 text-xs">Fecha actual</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <Users className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-purple-100 text-sm font-medium mb-1">Clases Esta Semana</p>
+              <p className="text-3xl font-bold">{kpis.week}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <Calendar className="h-4 w-4 text-purple-200" />
+                <span className="text-purple-100 text-xs">Lun - Dom</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <CalendarIcon className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-emerald-100 text-sm font-medium mb-1">Clases Este Mes</p>
+              <p className="text-3xl font-bold">{kpis.month}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <Calendar className="h-4 w-4 text-emerald-200" />
+                <span className="text-emerald-100 text-xs">Mes completo</span>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Filters */}
