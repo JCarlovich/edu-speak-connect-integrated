@@ -478,11 +478,14 @@ export const StudentsPage: React.FC = () => {
   // Calculate next scheduled class for a student
   const getNextClass = (studentName: string) => {
     const today = new Date();
-    const studentClasses = classes.filter(cls => 
-      cls.studentName === studentName && 
-      cls.status === 'Programada' && 
-      new Date(cls.date) >= today
-    );
+    
+    const studentClasses = classes.filter(cls => {
+      const nameMatch = cls.studentName.trim() === studentName.trim();
+      const isScheduled = cls.status === 'Programada';
+      const isFuture = new Date(cls.date) >= today;
+      
+      return nameMatch && isScheduled && isFuture;
+    });
     
     if (studentClasses.length === 0) return null;
     
