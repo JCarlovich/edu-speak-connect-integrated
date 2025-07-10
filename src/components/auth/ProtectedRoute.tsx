@@ -1,9 +1,17 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, UserRole } from '@/contexts/AuthContext';
 
-const Index = () => {
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles?: UserRole[];
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  allowedRoles 
+}) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -21,8 +29,9 @@ const Index = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // Redirect based on user role
-  return <Navigate to={user.role === 'teacher' ? '/dashboard' : '/student'} replace />;
-};
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to={user.role === 'teacher' ? '/' : '/student'} replace />;
+  }
 
-export default Index;
+  return <>{children}</>;
+};
