@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const students = [
   {
@@ -25,6 +26,37 @@ const students = [
     status: 'Activo',
     paymentStatus: 'Al día',
     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    homework: [
+      {
+        id: 1,
+        title: 'Conjugación de verbos irregulares',
+        assigned: '2024-03-12',
+        dueDate: '2024-03-15',
+        status: 'Completado',
+        score: 9.0,
+        type: 'Ejercicios'
+      },
+      {
+        id: 2,
+        title: 'Redacción: Mi rutina diaria',
+        assigned: '2024-03-10',
+        dueDate: '2024-03-14',
+        status: 'Pendiente',
+        score: null,
+        type: 'Ensayo'
+      }
+    ],
+    summaries: [
+      {
+        id: 1,
+        classDate: '2024-03-10',
+        topic: 'Pretérito perfecto vs imperfecto',
+        duration: '60 min',
+        achievements: ['Dominio de conjugaciones básicas', 'Mejora en pronunciación'],
+        weaknesses: ['Confusión en usos específicos', 'Velocidad de habla'],
+        nextFocus: 'Práctica conversacional con tiempos pasados'
+      }
+    ]
   },
   {
     id: 2,
@@ -45,6 +77,28 @@ const students = [
     status: 'Activo',
     paymentStatus: 'Al día',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+    homework: [
+      {
+        id: 1,
+        title: 'Análisis de texto literario',
+        assigned: '2024-03-08',
+        dueDate: '2024-03-14',
+        status: 'En progreso',
+        score: null,
+        type: 'Análisis'
+      }
+    ],
+    summaries: [
+      {
+        id: 1,
+        classDate: '2024-03-08',
+        topic: 'Subjuntivo en cláusulas nominales',
+        duration: '60 min',
+        achievements: ['Excelente comprensión teórica', 'Aplicación correcta en ejercicios'],
+        weaknesses: ['Dudas en expresiones idiomáticas'],
+        nextFocus: 'Subjuntivo en cláusulas adverbiales'
+      }
+    ]
   },
   {
     id: 3,
@@ -65,6 +119,37 @@ const students = [
     status: 'Activo',
     paymentStatus: 'Pendiente',
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+    homework: [
+      {
+        id: 1,
+        title: 'Vocabulario: La familia',
+        assigned: '2024-03-05',
+        dueDate: '2024-03-12',
+        status: 'Completado',
+        score: 7.5,
+        type: 'Vocabulario'
+      },
+      {
+        id: 2,
+        title: 'Diálogo en presente simple',
+        assigned: '2024-03-03',
+        dueDate: '2024-03-10',
+        status: 'Pendiente',
+        score: null,
+        type: 'Conversación'
+      }
+    ],
+    summaries: [
+      {
+        id: 1,
+        classDate: '2024-03-05',
+        topic: 'Presente simple - tercera persona',
+        duration: '45 min',
+        achievements: ['Comprende la estructura básica', 'Buena pronunciación'],
+        weaknesses: ['Olvida la -s en tercera persona', 'Vocabulario limitado'],
+        nextFocus: 'Práctica intensiva de tercera persona'
+      }
+    ]
   },
   {
     id: 4,
@@ -85,6 +170,18 @@ const students = [
     status: 'Inactivo',
     paymentStatus: 'Atrasado',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    homework: [],
+    summaries: [
+      {
+        id: 1,
+        classDate: '2024-02-28',
+        topic: 'Repaso general - condicionales',
+        duration: '60 min',
+        achievements: ['Entiende la teoría de condicionales'],
+        weaknesses: ['Dificultad en aplicación práctica', 'Falta de práctica'],
+        nextFocus: 'Retomar clases regularmente'
+      }
+    ]
   },
 ];
 
@@ -324,161 +421,290 @@ export const StudentsPage: React.FC = () => {
               </Button>
             </div>
 
-            {/* Content */}
+            {/* Content with Tabs */}
             <div className="p-6">
-              {/* Contact Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Contacto</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Mail className="h-5 w-5 text-gray-400" />
-                      <span className="text-gray-700">{selectedStudent.email}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Phone className="h-5 w-5 text-gray-400" />
-                      <span className="text-gray-700">{selectedStudent.phone}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Calendar className="h-5 w-5 text-gray-400" />
-                      <span className="text-gray-700">
-                        Desde: {new Date(selectedStudent.joinDate).toLocaleDateString('es-ES')}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              <Tabs defaultValue="general" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="general">Información General</TabsTrigger>
+                  <TabsTrigger value="payments">Pagos</TabsTrigger>
+                  <TabsTrigger value="homework">Deberes y Resúmenes</TabsTrigger>
+                </TabsList>
 
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Próxima Clase</h3>
-                  {selectedStudent.nextClass ? (
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Clock className="h-5 w-5 text-blue-500" />
-                        <span className="font-medium text-blue-700">
-                          {new Date(selectedStudent.nextClass).toLocaleDateString('es-ES', { 
-                            weekday: 'long', 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                          })}
-                        </span>
+                {/* General Information Tab */}
+                <TabsContent value="general" className="mt-6">
+                  {/* Contact Info */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Contacto</h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <Mail className="h-5 w-5 text-gray-400" />
+                          <span className="text-gray-700">{selectedStudent.email}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Phone className="h-5 w-5 text-gray-400" />
+                          <span className="text-gray-700">{selectedStudent.phone}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Calendar className="h-5 w-5 text-gray-400" />
+                          <span className="text-gray-700">
+                            Desde: {new Date(selectedStudent.joinDate).toLocaleDateString("es-ES")}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <BookOpen className="h-5 w-5 text-gray-400" />
+                          <span className="text-gray-700">Nivel: {selectedStudent.level}</span>
+                        </div>
                       </div>
-                      <Button 
-                        size="sm"
-                        className="bg-blue-500 hover:bg-blue-600"
-                        onClick={() => {
-                          console.log('Unirse a clase:', selectedStudent.name);
-                        }}
-                      >
-                        <Video className="h-4 w-4 mr-2" />
-                        Unirse a Clase
-                      </Button>
                     </div>
-                  ) : (
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-gray-600 mb-3">Sin clases programadas</p>
-                      <Button 
-                        size="sm"
-                        className="bg-blue-500 hover:bg-blue-600"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Programar Clase
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
 
-              {/* Statistics */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Estadísticas</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-50 p-4 rounded-lg text-center">
-                    <p className="text-sm text-gray-600">Clases Completadas</p>
-                    <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesCompleted}</p>
-                  </div>
-                  <div className="bg-blue-50 p-4 rounded-lg text-center">
-                    <p className="text-sm text-gray-600">Clases Restantes</p>
-                    <p className="text-2xl font-bold text-blue-600">{selectedStudent.classesRemaining}</p>
-                  </div>
-                  <div className="bg-emerald-50 p-4 rounded-lg text-center">
-                    <p className="text-sm text-gray-600">Promedio</p>
-                    <div className="flex items-center justify-center gap-1">
-                      <TrendingUp className="h-4 w-4 text-emerald-500" />
-                      <p className="text-2xl font-bold text-emerald-600">{selectedStudent.averageScore}</p>
-                    </div>
-                  </div>
-                  <div className="bg-purple-50 p-4 rounded-lg text-center">
-                    <p className="text-sm text-gray-600">Tareas</p>
-                    <p className="text-2xl font-bold text-purple-600">
-                      {selectedStudent.homeworkCompleted}/{selectedStudent.homeworkCompleted + selectedStudent.homeworkPending}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Information */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Pagos</h3>
-                <div className="bg-gray-50 p-6 rounded-lg">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <DollarSign className="h-5 w-5 text-emerald-500" />
-                        <span className="font-medium text-gray-700">Total Generado</span>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Próxima Clase</h3>
+                      {selectedStudent.nextClass ? (
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Clock className="h-5 w-5 text-blue-500" />
+                            <span className="font-medium text-blue-700">
+                              {new Date(selectedStudent.nextClass).toLocaleDateString("es-ES", { 
+                                weekday: "long", 
+                                year: "numeric", 
+                                month: "long", 
+                                day: "numeric" 
+                              })}
+                            </span>
+                          </div>
+                          <Button 
+                            size="sm"
+                            className="bg-blue-500 hover:bg-blue-600"
+                            onClick={() => {
+                              console.log("Unirse a clase:", selectedStudent.name);
+                            }}
+                          >
+                            <Video className="h-4 w-4 mr-2" />
+                            Unirse a Clase
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <p className="text-gray-600 mb-3">Sin clases programadas</p>
+                          <Button 
+                            size="sm"
+                            className="bg-blue-500 hover:bg-blue-600"
+                          >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Programar Clase
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Statistics */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Estadísticas</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-gray-600">Clases Completadas</p>
+                        <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesCompleted}</p>
                       </div>
-                      <p className="text-2xl font-bold text-emerald-600">€{selectedStudent.totalRevenue}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Clases Pagadas</p>
-                      <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesPaid}</p>
-                      <p className="text-sm text-gray-500">de {selectedStudent.classesCompleted + selectedStudent.classesRemaining} totales</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-2">Estado</p>
-                      <span className={`inline-block px-3 py-2 text-sm font-medium rounded-lg ${
-                        selectedStudent.paymentStatus === 'Al día' 
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : selectedStudent.paymentStatus === 'Pendiente'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}>
-                        {selectedStudent.paymentStatus}
-                      </span>
+                      <div className="bg-blue-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-gray-600">Clases Restantes</p>
+                        <p className="text-2xl font-bold text-blue-600">{selectedStudent.classesRemaining}</p>
+                      </div>
+                      <div className="bg-emerald-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-gray-600">Promedio</p>
+                        <div className="flex items-center justify-center gap-1">
+                          <TrendingUp className="h-4 w-4 text-emerald-500" />
+                          <p className="text-2xl font-bold text-emerald-600">{selectedStudent.averageScore}</p>
+                        </div>
+                      </div>
+                      <div className="bg-purple-50 p-4 rounded-lg text-center">
+                        <p className="text-sm text-gray-600">Tareas</p>
+                        <p className="text-2xl font-bold text-purple-600">
+                          {selectedStudent.homeworkCompleted}/{selectedStudent.homeworkCompleted + selectedStudent.homeworkPending}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <Button 
-                  className="bg-blue-500 hover:bg-blue-600"
-                  onClick={() => {
-                    console.log('Crear clase para:', selectedStudent.name);
-                  }}
-                >
-                  <Video className="h-4 w-4 mr-2" />
-                  Crear Nueva Clase
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    console.log('Ver historial de:', selectedStudent.name);
-                  }}
-                >
-                  <BookOpen className="h-4 w-4 mr-2" />
-                  Ver Historial
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    console.log('Editar estudiante:', selectedStudent.name);
-                  }}
-                >
-                  Editar Información
-                </Button>
-              </div>
+                  {/* Action Button */}
+                  <Button 
+                    className="bg-blue-500 hover:bg-blue-600"
+                    onClick={() => {
+                      console.log("Crear clase para:", selectedStudent.name);
+                    }}
+                  >
+                    <Video className="h-4 w-4 mr-2" />
+                    Crear Nueva Clase
+                  </Button>
+                </TabsContent>
+
+                {/* Payments Tab */}
+                <TabsContent value="payments" className="mt-6">
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-semibold text-gray-900">Información de Pagos</h3>
+                    
+                    {/* Payment Overview */}
+                    <div className="bg-gray-50 p-6 rounded-lg">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <DollarSign className="h-5 w-5 text-emerald-500" />
+                            <span className="font-medium text-gray-700">Total Generado</span>
+                          </div>
+                          <p className="text-2xl font-bold text-emerald-600">€{selectedStudent.totalRevenue}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600 mb-2">Clases Pagadas</p>
+                          <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesPaid}</p>
+                          <p className="text-sm text-gray-500">de {selectedStudent.classesCompleted + selectedStudent.classesRemaining} totales</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600 mb-2">Estado</p>
+                          <span className={`inline-block px-3 py-2 text-sm font-medium rounded-lg ${
+                            selectedStudent.paymentStatus === "Al día" 
+                              ? "bg-emerald-100 text-emerald-700"
+                              : selectedStudent.paymentStatus === "Pendiente"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                          }`}>
+                            {selectedStudent.paymentStatus}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Payment History */}
+                    <div>
+                      <h4 className="text-md font-semibold text-gray-900 mb-4">Historial de Pagos</h4>
+                      <div className="space-y-3">
+                        {Array.from({ length: 3 }, (_, i) => (
+                          <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+                            <div>
+                              <p className="font-medium text-gray-900">Pago por 4 clases</p>
+                              <p className="text-sm text-gray-600">{new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000).toLocaleDateString("es-ES")}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-bold text-emerald-600">€{120 - i * 10}</p>
+                              <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+                                Completado
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                {/* Homework & Summaries Tab */}
+                <TabsContent value="homework" className="mt-6">
+                  <div className="space-y-8">
+                    {/* Homework Section */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Deberes</h3>
+                      {selectedStudent.homework && selectedStudent.homework.length > 0 ? (
+                        <div className="space-y-4">
+                          {selectedStudent.homework.map((hw: any) => (
+                            <div key={hw.id} className="p-4 border border-gray-200 rounded-lg">
+                              <div className="flex items-start justify-between mb-3">
+                                <div>
+                                  <h4 className="font-medium text-gray-900">{hw.title}</h4>
+                                  <p className="text-sm text-gray-600">{hw.type}</p>
+                                </div>
+                                <span className={`px-2 py-1 text-xs rounded-full ${
+                                  hw.status === "Completado" 
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : hw.status === "En progreso"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : "bg-yellow-100 text-yellow-700"
+                                }`}>
+                                  {hw.status}
+                                </span>
+                              </div>
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                  <p className="text-gray-600">Asignado: {new Date(hw.assigned).toLocaleDateString("es-ES")}</p>
+                                  <p className="text-gray-600">Fecha límite: {new Date(hw.dueDate).toLocaleDateString("es-ES")}</p>
+                                </div>
+                                <div className="text-right">
+                                  {hw.score && (
+                                    <div className="flex items-center justify-end gap-1">
+                                      {hw.score >= 8 ? (
+                                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                      ) : (
+                                        <AlertCircle className="h-4 w-4 text-yellow-500" />
+                                      )}
+                                      <span className="font-medium">Nota: {hw.score}/10</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600 text-center py-8">No hay deberes asignados</p>
+                      )}
+                    </div>
+
+                    {/* Class Summaries Section */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Resúmenes de Clases</h3>
+                      {selectedStudent.summaries && selectedStudent.summaries.length > 0 ? (
+                        <div className="space-y-6">
+                          {selectedStudent.summaries.map((summary: any) => (
+                            <div key={summary.id} className="p-6 border border-gray-200 rounded-lg">
+                              <div className="flex items-start justify-between mb-4">
+                                <div>
+                                  <h4 className="font-medium text-gray-900 text-lg">{summary.topic}</h4>
+                                  <p className="text-sm text-gray-600">
+                                    {new Date(summary.classDate).toLocaleDateString("es-ES")} • {summary.duration}
+                                  </p>
+                                </div>
+                                <FileText className="h-5 w-5 text-gray-400" />
+                              </div>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                  <h5 className="font-medium text-emerald-700 mb-2 flex items-center gap-2">
+                                    <CheckCircle2 className="h-4 w-4" />
+                                    Logros
+                                  </h5>
+                                  <ul className="space-y-1">
+                                    {summary.achievements.map((achievement: string, index: number) => (
+                                      <li key={index} className="text-sm text-gray-700">• {achievement}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                
+                                <div>
+                                  <h5 className="font-medium text-orange-700 mb-2 flex items-center gap-2">
+                                    <AlertCircle className="h-4 w-4" />
+                                    Áreas de Mejora
+                                  </h5>
+                                  <ul className="space-y-1">
+                                    {summary.weaknesses.map((weakness: string, index: number) => (
+                                      <li key={index} className="text-sm text-gray-700">• {weakness}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                              
+                              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                                <h5 className="font-medium text-blue-700 mb-1">Próximo Enfoque</h5>
+                                <p className="text-sm text-blue-600">{summary.nextFocus}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600 text-center py-8">No hay resúmenes de clases disponibles</p>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </Card>
         </div>
