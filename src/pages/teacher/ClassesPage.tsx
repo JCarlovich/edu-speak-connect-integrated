@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon, BookOpen } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -324,160 +324,205 @@ export const ClassesPage: React.FC = () => {
 
       {/* New Class Modal */}
       {showNewClassModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              {/* Modal Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Nueva Clase</h2>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setShowNewClassModal(false)}
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
-
-              {/* Form */}
-              <div className="space-y-4">
-                {/* Student Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-3xl max-h-[95vh] overflow-y-auto bg-white/95 backdrop-blur-md border-0 shadow-2xl rounded-3xl">
+            <div className="relative">
+              {/* Gradient Header */}
+              <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-8 rounded-t-3xl">
+                <div className="flex items-center justify-between">
                   <div>
-                    <Label htmlFor="studentName">Nombre del Estudiante</Label>
-                    <Input
-                      id="studentName"
-                      value={newClassData.studentName}
-                      onChange={(e) => setNewClassData({...newClassData, studentName: e.target.value})}
-                      placeholder="Nombre completo"
-                    />
+                    <h2 className="text-2xl font-bold text-white mb-2">✨ Nueva Clase</h2>
+                    <p className="text-blue-100">Programa una nueva sesión con tu estudiante</p>
                   </div>
-                  <div>
-                    <Label htmlFor="studentEmail">Email del Estudiante</Label>
-                    <Input
-                      id="studentEmail"
-                      type="email"
-                      value={newClassData.studentEmail}
-                      onChange={(e) => setNewClassData({...newClassData, studentEmail: e.target.value})}
-                      placeholder="email@ejemplo.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="studentLevel">Nivel</Label>
-                  <Select 
-                    value={newClassData.studentLevel} 
-                    onValueChange={(value) => setNewClassData({...newClassData, studentLevel: value})}
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setShowNewClassModal(false)}
+                    className="text-white hover:bg-white/20 rounded-full w-10 h-10 p-0"
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Básico">Básico</SelectItem>
-                      <SelectItem value="Intermedio">Intermedio</SelectItem>
-                      <SelectItem value="Avanzado">Avanzado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Class Details */}
-                <div>
-                  <Label htmlFor="topic">Tema de la Clase</Label>
-                  <Input
-                    id="topic"
-                    value={newClassData.topic}
-                    onChange={(e) => setNewClassData({...newClassData, topic: e.target.value})}
-                    placeholder="Ej: Conversación Avanzada, Gramática, etc."
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="date">Fecha</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={newClassData.date}
-                      onChange={(e) => setNewClassData({...newClassData, date: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="time">Hora</Label>
-                    <Select 
-                      value={newClassData.time} 
-                      onValueChange={(value) => setNewClassData({...newClassData, time: value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar hora" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {timeOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="duration">Duración (min)</Label>
-                    <Select 
-                      value={newClassData.duration} 
-                      onValueChange={(value) => setNewClassData({...newClassData, duration: value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="30">30 minutos</SelectItem>
-                        <SelectItem value="45">45 minutos</SelectItem>
-                        <SelectItem value="60">60 minutos</SelectItem>
-                        <SelectItem value="90">90 minutos</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="meetingLink">Enlace de Reunión (opcional)</Label>
-                  <Input
-                    id="meetingLink"
-                    value={newClassData.meetingLink}
-                    onChange={(e) => setNewClassData({...newClassData, meetingLink: e.target.value})}
-                    placeholder="https://meet.google.com/..."
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="notes">Notas</Label>
-                  <Textarea
-                    id="notes"
-                    value={newClassData.notes}
-                    onChange={(e) => setNewClassData({...newClassData, notes: e.target.value})}
-                    placeholder="Notas adicionales sobre la clase..."
-                    rows={3}
-                  />
+                    <X className="h-5 w-5" />
+                  </Button>
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex gap-2 mt-6">
-                <Button 
-                  variant="outline" 
-                  className="flex-1"
-                  onClick={() => setShowNewClassModal(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  className="flex-1 bg-blue-500 hover:bg-blue-600"
-                  onClick={handleAddClass}
-                  disabled={!newClassData.studentName || !newClassData.topic || !newClassData.date || !newClassData.time}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Crear Clase
-                </Button>
+              {/* Form Content */}
+              <div className="p-8">
+                <div className="space-y-8">
+                  {/* Student Info Section */}
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl border border-blue-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <User className="h-5 w-5 text-blue-500" />
+                      Información del Estudiante
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="studentName" className="text-sm font-medium text-gray-700">Nombre del Estudiante</Label>
+                        <Input
+                          id="studentName"
+                          value={newClassData.studentName}
+                          onChange={(e) => setNewClassData({...newClassData, studentName: e.target.value})}
+                          placeholder="Nombre completo"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 transition-all"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="studentEmail" className="text-sm font-medium text-gray-700">Email del Estudiante</Label>
+                        <Input
+                          id="studentEmail"
+                          type="email"
+                          value={newClassData.studentEmail}
+                          onChange={(e) => setNewClassData({...newClassData, studentEmail: e.target.value})}
+                          placeholder="email@ejemplo.com"
+                          className="h-12 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-4 space-y-2">
+                      <Label htmlFor="studentLevel" className="text-sm font-medium text-gray-700">Nivel</Label>
+                      <Select 
+                        value={newClassData.studentLevel} 
+                        onValueChange={(value) => setNewClassData({...newClassData, studentLevel: value})}
+                      >
+                        <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-blue-400">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="Básico">🟢 Básico</SelectItem>
+                          <SelectItem value="Intermedio">🟡 Intermedio</SelectItem>
+                          <SelectItem value="Avanzado">🔴 Avanzado</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Class Details Section */}
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-2xl border border-green-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <BookOpen className="h-5 w-5 text-green-500" />
+                      Detalles de la Clase
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="topic" className="text-sm font-medium text-gray-700">Tema de la Clase</Label>
+                        <Input
+                          id="topic"
+                          value={newClassData.topic}
+                          onChange={(e) => setNewClassData({...newClassData, topic: e.target.value})}
+                          placeholder="Ej: Conversación Avanzada, Gramática, etc."
+                          className="h-12 rounded-xl border-gray-200 focus:border-green-400 focus:ring-green-400/20 transition-all"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="date" className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            Fecha
+                          </Label>
+                          <Input
+                            id="date"
+                            type="date"
+                            value={newClassData.date}
+                            onChange={(e) => setNewClassData({...newClassData, date: e.target.value})}
+                            className="h-12 rounded-xl border-gray-200 focus:border-green-400 focus:ring-green-400/20 transition-all"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="time" className="text-sm font-medium text-gray-700 flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            Hora
+                          </Label>
+                          <Select 
+                            value={newClassData.time} 
+                            onValueChange={(value) => setNewClassData({...newClassData, time: value})}
+                          >
+                            <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-green-400">
+                              <SelectValue placeholder="Seleccionar hora" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl max-h-40">
+                              {timeOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="duration" className="text-sm font-medium text-gray-700">Duración</Label>
+                          <Select 
+                            value={newClassData.duration} 
+                            onValueChange={(value) => setNewClassData({...newClassData, duration: value})}
+                          >
+                            <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-green-400">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl">
+                              <SelectItem value="30">⏱️ 30 minutos</SelectItem>
+                              <SelectItem value="45">⏰ 45 minutos</SelectItem>
+                              <SelectItem value="60">🕐 60 minutos</SelectItem>
+                              <SelectItem value="90">⏳ 90 minutos</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Info Section */}
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl border border-purple-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Video className="h-5 w-5 text-purple-500" />
+                      Información Adicional
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="meetingLink" className="text-sm font-medium text-gray-700">Enlace de Reunión (opcional)</Label>
+                        <Input
+                          id="meetingLink"
+                          value={newClassData.meetingLink}
+                          onChange={(e) => setNewClassData({...newClassData, meetingLink: e.target.value})}
+                          placeholder="https://meet.google.com/... (se generará automáticamente si se deja vacío)"
+                          className="h-12 rounded-xl border-gray-200 focus:border-purple-400 focus:ring-purple-400/20 transition-all"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="notes" className="text-sm font-medium text-gray-700">Notas</Label>
+                        <Textarea
+                          id="notes"
+                          value={newClassData.notes}
+                          onChange={(e) => setNewClassData({...newClassData, notes: e.target.value})}
+                          placeholder="Notas adicionales sobre la clase..."
+                          rows={3}
+                          className="rounded-xl border-gray-200 focus:border-purple-400 focus:ring-purple-400/20 transition-all resize-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-4 mt-8">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 h-12 rounded-xl border-gray-200 hover:bg-gray-50 transition-all"
+                    onClick={() => setShowNewClassModal(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    className="flex-1 h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                    onClick={handleAddClass}
+                    disabled={!newClassData.studentName || !newClassData.topic || !newClassData.date || !newClassData.time}
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    Crear Clase
+                  </Button>
+                </div>
               </div>
             </div>
           </Card>
