@@ -887,13 +887,13 @@ export const StudentsPage: React.FC = () => {
                       {selectedStudent.status}
                     </span>
                     <span className={`px-3 py-1 text-sm rounded-full ${
-                      selectedStudent.paymentStatus === 'Al día' 
+                      calculatePaymentInfo(selectedStudent).paymentStatus === 'Al día' 
                         ? 'bg-emerald-100 text-emerald-700'
-                        : selectedStudent.paymentStatus === 'Pendiente'
+                        : calculatePaymentInfo(selectedStudent).paymentStatus === 'Pendiente'
                         ? 'bg-yellow-100 text-yellow-700'
                         : 'bg-red-100 text-red-700'
                     }`}>
-                      {selectedStudent.paymentStatus}
+                      {calculatePaymentInfo(selectedStudent).paymentStatus}
                     </span>
                   </div>
                 </div>
