@@ -269,120 +269,102 @@ export const ClassesPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* KPIs Section - Organizados en 2 filas */}
-      <div className="space-y-6 mb-8">
-        {/* Primera fila - Métricas generales */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <Users className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-blue-100 text-sm font-medium mb-1">Estudiantes Activos</p>
-                <p className="text-3xl font-bold">{kpis.totalStudents}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <User className="h-4 w-4 text-blue-200" />
-                  <span className="text-blue-100 text-xs">Con clases programadas</span>
+      {/* KPIs Section - Diseño minimalista y elegante */}
+      <div className="space-y-4 mb-8">
+        {/* Primera fila - Métricas principales */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-white/90 backdrop-blur-sm border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden group">
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                  <Users className="h-5 w-5 text-blue-600" />
                 </div>
+                <span className="text-2xl font-bold text-gray-900">{kpis.totalStudents}</span>
               </div>
+              <h3 className="text-sm font-medium text-gray-600">Estudiantes Activos</h3>
+              <p className="text-xs text-gray-400 mt-1">Con clases programadas</p>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <Calendar className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-emerald-100 text-sm font-medium mb-1">Clases Programadas</p>
-                <p className="text-3xl font-bold">{kpis.totalScheduled}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Clock className="h-4 w-4 text-emerald-200" />
-                  <span className="text-emerald-100 text-xs">Total futuras</span>
+          <Card className="bg-white/90 backdrop-blur-sm border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden group">
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+                  <Calendar className="h-5 w-5 text-emerald-600" />
                 </div>
+                <span className="text-2xl font-bold text-gray-900">{kpis.totalScheduled}</span>
               </div>
+              <h3 className="text-sm font-medium text-gray-600">Clases Programadas</h3>
+              <p className="text-xs text-gray-400 mt-1">Total futuras</p>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <DollarSign className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-purple-100 text-sm font-medium mb-1">Clases Pagadas</p>
-                <p className="text-3xl font-bold">{kpis.totalPaid}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <CircleDollarSign className="h-4 w-4 text-purple-200" />
-                  <span className="text-purple-100 text-xs">{kpis.paymentRate}% del total</span>
+          <Card className="bg-white/90 backdrop-blur-sm border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden group">
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                  <DollarSign className="h-5 w-5 text-purple-600" />
                 </div>
+                <span className="text-2xl font-bold text-gray-900">{kpis.totalPaid}</span>
               </div>
+              <h3 className="text-sm font-medium text-gray-600">Clases Pagadas</h3>
+              <p className="text-xs text-gray-400 mt-1">{kpis.paymentRate}% del total</p>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <CheckCircle className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-orange-100 text-sm font-medium mb-1">Clases Completadas</p>
-                <p className="text-3xl font-bold">{kpis.totalCompleted}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Calendar className="h-4 w-4 text-orange-200" />
-                  <span className="text-orange-100 text-xs">Total histórico</span>
+          <Card className="bg-white/90 backdrop-blur-sm border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden group">
+            <div className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+                  <CheckCircle className="h-5 w-5 text-gray-600" />
                 </div>
+                <span className="text-2xl font-bold text-gray-900">{kpis.totalCompleted}</span>
               </div>
+              <h3 className="text-sm font-medium text-gray-600">Completadas</h3>
+              <p className="text-xs text-gray-400 mt-1">Total histórico</p>
             </div>
           </Card>
         </div>
 
-        {/* Segunda fila - Métricas de tiempo */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-gradient-to-br from-cyan-500 to-cyan-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <Clock className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-cyan-100 text-sm font-medium mb-1">Clases Hoy</p>
-                <p className="text-3xl font-bold">{kpis.today}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <CalendarIcon className="h-4 w-4 text-cyan-200" />
-                  <span className="text-cyan-100 text-xs">Fecha actual</span>
+        {/* Segunda fila - Métricas de tiempo (más compacta) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-200/50 flex items-center justify-center">
+                  <Clock className="h-4 w-4 text-slate-600" />
+                </div>
+                <div>
+                  <span className="text-lg font-semibold text-slate-900">{kpis.today}</span>
+                  <p className="text-xs text-slate-500">Clases hoy</p>
                 </div>
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-pink-500 to-pink-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <Calendar className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-pink-100 text-sm font-medium mb-1">Clases Esta Semana</p>
-                <p className="text-3xl font-bold">{kpis.week}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Clock className="h-4 w-4 text-pink-200" />
-                  <span className="text-pink-100 text-xs">Lun - Dom</span>
+          <Card className="bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-200/50 flex items-center justify-center">
+                  <Calendar className="h-4 w-4 text-slate-600" />
+                </div>
+                <div>
+                  <span className="text-lg font-semibold text-slate-900">{kpis.week}</span>
+                  <p className="text-xs text-slate-500">Esta semana</p>
                 </div>
               </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-            <div className="p-6 relative">
-              <div className="absolute top-4 right-4 opacity-20">
-                <CalendarIcon className="h-8 w-8" />
-              </div>
-              <div className="relative z-10">
-                <p className="text-indigo-100 text-sm font-medium mb-1">Clases Este Mes</p>
-                <p className="text-3xl font-bold">{kpis.month}</p>
-                <div className="flex items-center gap-2 mt-2">
-                  <Calendar className="h-4 w-4 text-indigo-200" />
-                  <span className="text-indigo-100 text-xs">Mes completo</span>
+          <Card className="bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden">
+            <div className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-slate-200/50 flex items-center justify-center">
+                  <CalendarIcon className="h-4 w-4 text-slate-600" />
+                </div>
+                <div>
+                  <span className="text-lg font-semibold text-slate-900">{kpis.month}</span>
+                  <p className="text-xs text-slate-500">Este mes</p>
                 </div>
               </div>
             </div>
