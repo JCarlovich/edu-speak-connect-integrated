@@ -173,14 +173,6 @@ export function AppSidebar() {
                   <span>Mi Perfil</span>
                 </button>
                 
-                <button 
-                  onClick={() => handleNavigate('/settings')}
-                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <Settings className="h-4 w-4 text-gray-500" />
-                  <span>Configuración</span>
-                </button>
-                
                 {user.role === 'teacher' && (
                   <button 
                     onClick={() => handleNavigate('/billing')}
