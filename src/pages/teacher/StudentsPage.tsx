@@ -478,14 +478,21 @@ export const StudentsPage: React.FC = () => {
   // Calculate next scheduled class for a student
   const getNextClass = (studentName: string) => {
     const today = new Date();
+    console.log('Fecha actual:', today);
+    console.log('Buscando próxima clase para:', studentName);
     
     const studentClasses = classes.filter(cls => {
+      const classDate = new Date(cls.date);
       const nameMatch = cls.studentName.trim() === studentName.trim();
       const isScheduled = cls.status === 'Programada';
-      const isFuture = new Date(cls.date) >= today;
+      const isFuture = classDate >= today;
+      
+      console.log(`Clase: ${cls.studentName} - ${cls.date} - Status: ${cls.status} - ¿Futura?: ${isFuture}`);
       
       return nameMatch && isScheduled && isFuture;
     });
+    
+    console.log('Clases filtradas para', studentName, ':', studentClasses);
     
     if (studentClasses.length === 0) return null;
     
@@ -496,6 +503,7 @@ export const StudentsPage: React.FC = () => {
       return dateA.getTime() - dateB.getTime();
     });
     
+    console.log('Próxima clase encontrada:', sortedClasses[0]);
     return sortedClasses[0];
   };
 

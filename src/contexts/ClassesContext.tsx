@@ -41,7 +41,7 @@ const defaultClasses: Class[] = [
     studentEmail: 'ana.martinez@email.com',
     studentLevel: 'Intermedio',
     topic: 'Conversación Avanzada',
-    date: '2025-01-15',
+    date: '2025-01-20',
     time: '10:00',
     duration: '60',
     status: 'Programada',
