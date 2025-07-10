@@ -64,29 +64,6 @@ const upcomingClasses = [
   },
 ];
 
-const recentActivities = [
-  {
-    id: 1,
-    action: 'Nueva transcripción generada',
-    student: 'Ana Martínez',
-    time: 'Hace 30 min',
-    type: 'transcription',
-  },
-  {
-    id: 2,
-    action: 'Tarea completada',
-    student: 'Carlos López',
-    time: 'Hace 1 hora',
-    type: 'homework',
-  },
-  {
-    id: 3,
-    action: 'Clase programada',
-    student: 'María González',
-    time: 'Hace 2 horas',
-    type: 'class',
-  },
-];
 
 const students = [
   {
@@ -212,56 +189,27 @@ export const TeacherDashboard: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Upcoming Classes */}
-        <Card className="p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Clock className="h-5 w-5 text-blue-500" />
-            <h2 className="text-lg font-semibold text-gray-900">Clases de Hoy</h2>
-          </div>
-          <div className="space-y-4">
-            {upcomingClasses.map((cls) => (
-              <div key={cls.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-gray-900">{cls.student}</p>
-                  <p className="text-sm text-gray-600">{cls.subject} • {cls.level}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium text-blue-600">{cls.time}</p>
-                  <p className="text-sm text-gray-500">{cls.duration}</p>
-                </div>
+      {/* Upcoming Classes */}
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <Clock className="h-5 w-5 text-blue-500" />
+          <h2 className="text-lg font-semibold text-gray-900">Clases de Hoy</h2>
+        </div>
+        <div className="space-y-4">
+          {upcomingClasses.map((cls) => (
+            <div key={cls.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div>
+                <p className="font-medium text-gray-900">{cls.student}</p>
+                <p className="text-sm text-gray-600">{cls.subject} • {cls.level}</p>
               </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card className="p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <BookOpen className="h-5 w-5 text-emerald-500" />
-            <h2 className="text-lg font-semibold text-gray-900">Actividad Reciente</h2>
-          </div>
-          <div className="space-y-4">
-            {recentActivities.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-3">
-                <div className={`p-2 rounded-full ${
-                  activity.type === 'transcription' ? 'bg-purple-100' :
-                  activity.type === 'homework' ? 'bg-emerald-100' : 'bg-blue-100'
-                }`}>
-                  {activity.type === 'transcription' && <FileText className="h-4 w-4 text-purple-600" />}
-                  {activity.type === 'homework' && <BookOpen className="h-4 w-4 text-emerald-600" />}
-                  {activity.type === 'class' && <Calendar className="h-4 w-4 text-blue-600" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                  <p className="text-sm text-gray-600">{activity.student}</p>
-                  <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
-                </div>
+              <div className="text-right">
+                <p className="font-medium text-blue-600">{cls.time}</p>
+                <p className="text-sm text-gray-500">{cls.duration}</p>
               </div>
-            ))}
-          </div>
-        </Card>
-      </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {/* Create Class Modal */}
       {showCreateClass && (
