@@ -475,6 +475,27 @@ export const StudentsPage: React.FC = () => {
     return { completedClasses, remainingClasses };
   };
 
+  // Calculate next scheduled class for a student
+  const getNextClass = (studentName: string) => {
+    const today = new Date();
+    const studentClasses = classes.filter(cls => 
+      cls.studentName === studentName && 
+      cls.status === 'Programada' && 
+      new Date(cls.date) >= today
+    );
+    
+    if (studentClasses.length === 0) return null;
+    
+    // Sort by date and time to get the nearest one
+    const sortedClasses = studentClasses.sort((a, b) => {
+      const dateA = new Date(`${a.date}T${a.time}`);
+      const dateB = new Date(`${b.date}T${b.time}`);
+      return dateA.getTime() - dateB.getTime();
+    });
+    
+    return sortedClasses[0];
+  };
+
   // Check for student parameter in URL and auto-open modal
   useEffect(() => {
     const studentName = searchParams.get('student');
@@ -592,28 +613,32 @@ export const StudentsPage: React.FC = () => {
               </div>
 
               {/* Next Class Info - Summary */}
-              {student.nextClass ? (
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Clock className="h-4 w-4 text-blue-500" />
-                    <span className="text-sm font-medium text-blue-700">Próxima Clase</span>
+              {(() => {
+                const nextClass = getNextClass(student.name);
+                return nextClass ? (
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock className="h-4 w-4 text-blue-500" />
+                      <span className="text-sm font-medium text-blue-700">Próxima Clase</span>
+                    </div>
+                    <p className="text-sm text-blue-600">
+                      {new Date(nextClass.date).toLocaleDateString('es-ES', { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })} - {nextClass.time}
+                    </p>
+                    <p className="text-xs text-blue-500 mt-1">{nextClass.topic}</p>
                   </div>
-                  <p className="text-sm text-blue-600">
-                    {new Date(student.nextClass).toLocaleDateString('es-ES', { 
-                      weekday: 'short', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}
-                  </p>
-                </div>
-              ) : (
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">Sin clases programadas</span>
+                ) : (
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-600">Sin clases programadas</span>
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           </Card>
         ))}
@@ -946,42 +971,46 @@ export const StudentsPage: React.FC = () => {
 
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Próxima Clase</h3>
-                      {selectedStudent.nextClass ? (
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Clock className="h-5 w-5 text-blue-500" />
-                            <span className="font-medium text-blue-700">
-                              {new Date(selectedStudent.nextClass).toLocaleDateString("es-ES", { 
-                                weekday: "long", 
-                                year: "numeric", 
-                                month: "long", 
-                                day: "numeric" 
-                              })}
-                            </span>
+                      {(() => {
+                        const nextClass = getNextClass(selectedStudent.name);
+                        return nextClass ? (
+                          <div className="bg-blue-50 p-4 rounded-lg">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Clock className="h-5 w-5 text-blue-500" />
+                              <span className="font-medium text-blue-700">
+                                {new Date(nextClass.date).toLocaleDateString("es-ES", { 
+                                  weekday: "long", 
+                                  year: "numeric", 
+                                  month: "long", 
+                                  day: "numeric" 
+                                })} - {nextClass.time}
+                              </span>
+                            </div>
+                            <p className="text-sm text-blue-600 mb-3">{nextClass.topic}</p>
+                            {nextClass.meetingLink && (
+                              <Button 
+                                size="sm"
+                                className="bg-blue-500 hover:bg-blue-600"
+                                onClick={() => window.open(nextClass.meetingLink, '_blank')}
+                              >
+                                <Video className="h-4 w-4 mr-2" />
+                                Unirse a Clase
+                              </Button>
+                            )}
                           </div>
-                          <Button 
-                            size="sm"
-                            className="bg-blue-500 hover:bg-blue-600"
-                            onClick={() => {
-                              console.log("Unirse a clase:", selectedStudent.name);
-                            }}
-                          >
-                            <Video className="h-4 w-4 mr-2" />
-                            Unirse a Clase
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                          <p className="text-gray-600 mb-3">Sin clases programadas</p>
-                          <Button 
-                            size="sm"
-                            className="bg-blue-500 hover:bg-blue-600"
-                          >
-                            <Plus className="h-4 w-4 mr-2" />
-                            Programar Clase
-                          </Button>
-                        </div>
-                      )}
+                        ) : (
+                          <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-gray-600 mb-3">Sin clases programadas</p>
+                            <Button 
+                              size="sm"
+                              className="bg-blue-500 hover:bg-blue-600"
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Programar Clase
+                            </Button>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 
