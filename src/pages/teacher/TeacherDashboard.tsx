@@ -147,6 +147,7 @@ export const TeacherDashboard: React.FC = () => {
       time: classData.time,
       duration: classData.duration,
       status: 'Programada',
+      paymentStatus: 'No Pagado',
       meetingLink: meetingLink,
       notes: classData.notes || ''
     });

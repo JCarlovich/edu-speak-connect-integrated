@@ -3,10 +3,11 @@ import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useClasses } from '@/contexts/ClassesContext';
 
 export const ClassesPage: React.FC = () => {
-  const { classes } = useClasses();
+  const { classes, updateClass } = useClasses();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('Todas');
 
@@ -21,10 +22,21 @@ export const ClassesPage: React.FC = () => {
     switch (status) {
       case 'Programada':
         return 'bg-emerald-100 text-emerald-700';
-      case 'Pendiente Confirmación':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'Cancelada':
+      case 'Completada':
+        return 'bg-blue-100 text-blue-700';
+      case 'No Realizada':
         return 'bg-red-100 text-red-700';
+      default:
+        return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getPaymentColor = (paymentStatus: string) => {
+    switch (paymentStatus) {
+      case 'Pagado':
+        return 'bg-green-100 text-green-700';
+      case 'No Pagado':
+        return 'bg-orange-100 text-orange-700';
       default:
         return 'bg-gray-100 text-gray-700';
     }
@@ -99,8 +111,8 @@ export const ClassesPage: React.FC = () => {
           >
             <option value="Todas">Todas</option>
             <option value="Programada">Programadas</option>
-            <option value="Pendiente Confirmación">Pendientes</option>
-            <option value="Cancelada">Canceladas</option>
+            <option value="Completada">Completadas</option>
+            <option value="No Realizada">No Realizadas</option>
           </select>
         </div>
       </div>
@@ -153,10 +165,49 @@ export const ClassesPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Status */}
-                    <div className="flex items-center justify-between mb-4">
+                    {/* Status Controls */}
+                    <div className="space-y-3 mb-4">
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-1">Estado de la clase</label>
+                        <Select 
+                          value={cls.status} 
+                          onValueChange={(value) => updateClass(cls.id, { status: value })}
+                        >
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Programada">Programada</SelectItem>
+                            <SelectItem value="Completada">Completada</SelectItem>
+                            <SelectItem value="No Realizada">No Realizada</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <label className="text-xs font-medium text-gray-600 block mb-1">Estado de pago</label>
+                        <Select 
+                          value={cls.paymentStatus} 
+                          onValueChange={(value) => updateClass(cls.id, { paymentStatus: value })}
+                        >
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Pagado">Pagado</SelectItem>
+                            <SelectItem value="No Pagado">No Pagado</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {/* Status Badges */}
+                    <div className="flex gap-2 mb-4">
                       <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(cls.status)}`}>
                         {cls.status}
+                      </span>
+                      <span className={`px-2 py-1 text-xs rounded-full ${getPaymentColor(cls.paymentStatus)}`}>
+                        {cls.paymentStatus}
                       </span>
                     </div>
 
@@ -181,15 +232,6 @@ export const ClassesPage: React.FC = () => {
                           Confirmar
                         </Button>
                       )}
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => {
-                          console.log('Ver detalles:', cls.id);
-                        }}
-                      >
-                        Detalles
-                      </Button>
                     </div>
                   </Card>
                 ))}

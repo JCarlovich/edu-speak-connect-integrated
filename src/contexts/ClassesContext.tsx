@@ -11,6 +11,7 @@ interface Class {
   time: string;
   duration: string;
   status: string;
+  paymentStatus: string;
   meetingLink: string;
   notes: string;
 }
@@ -44,6 +45,7 @@ const defaultClasses: Class[] = [
     time: '10:00',
     duration: '60',
     status: 'Programada',
+    paymentStatus: 'Pagado',
     meetingLink: 'https://meet.google.com/abc-defg-hij',
     notes: 'Practicar tiempo pasado y vocabulario de viajes'
   },
@@ -58,6 +60,7 @@ const defaultClasses: Class[] = [
     time: '14:00',
     duration: '45',
     status: 'Programada',
+    paymentStatus: 'No Pagado',
     meetingLink: 'https://meet.google.com/xyz-abcd-efg',
     notes: 'Continuar con cláusulas adverbiales'
   },
@@ -71,7 +74,8 @@ const defaultClasses: Class[] = [
     date: '2024-03-16',
     time: '09:30',
     duration: '30',
-    status: 'Programada',
+    status: 'Completada',
+    paymentStatus: 'Pagado',
     meetingLink: 'https://meet.google.com/hij-klmn-opq',
     notes: 'Repasar números y colores'
   },
@@ -85,7 +89,8 @@ const defaultClasses: Class[] = [
     date: '2024-03-18',
     time: '11:00',
     duration: '45',
-    status: 'Programada',
+    status: 'No Realizada',
+    paymentStatus: 'No Pagado',
     meetingLink: 'https://meet.google.com/rst-uvwx-yz1',
     notes: 'Enfocarse en sonidos difíciles'
   },
@@ -99,7 +104,8 @@ const defaultClasses: Class[] = [
     date: '2024-03-20',
     time: '16:00',
     duration: '60',
-    status: 'Pendiente Confirmación',
+    status: 'Programada',
+    paymentStatus: 'Pagado',
     meetingLink: '',
     notes: 'Evaluación general del progreso'
   }
