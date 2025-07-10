@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -91,6 +91,7 @@ const students = [
 export const StudentsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddStudent, setShowAddStudent] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -133,7 +134,11 @@ export const StudentsPage: React.FC = () => {
       {/* Students Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredStudents.map((student) => (
-          <Card key={student.id} className="p-6 hover:shadow-lg transition-shadow">
+           <Card 
+            key={student.id} 
+            className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => setSelectedStudent(student)}
+          >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <img
@@ -152,7 +157,14 @@ export const StudentsPage: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Aquí iría el menú de opciones
+                }}
+              >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </div>
@@ -172,84 +184,41 @@ export const StudentsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Statistics Grid */}
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="text-center">
-                  <p className="text-xs text-gray-500">Clases Completadas</p>
-                  <p className="text-lg font-bold text-gray-900">{student.classesCompleted}</p>
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <p className="text-sm text-gray-600">Nivel</p>
+                  <p className="font-medium text-gray-900">{student.level}</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-xs text-gray-500">Clases Restantes</p>
-                  <p className="text-lg font-bold text-blue-600">{student.classesRemaining}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs text-gray-500">Promedio</p>
-                  <div className="flex items-center justify-center gap-1">
-                    <TrendingUp className="h-3 w-3 text-emerald-500" />
-                    <p className="text-lg font-bold text-emerald-600">{student.averageScore}</p>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs text-gray-500">Tareas</p>
-                  <p className="text-lg font-bold text-purple-600">{student.homeworkCompleted}/{student.homeworkCompleted + student.homeworkPending}</p>
+                <div className="text-right">
+                  <p className="text-sm text-gray-600">Clases</p>
+                  <p className="font-medium text-gray-900">{student.classesCompleted}</p>
                 </div>
               </div>
 
-              {/* Payment Info */}
-              <div className="bg-gray-50 p-3 rounded-lg mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-emerald-500" />
-                    <span className="text-sm font-medium text-gray-700">Estado de Pago</span>
-                  </div>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    student.paymentStatus === 'Al día' 
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : student.paymentStatus === 'Pendiente'
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-red-100 text-red-700'
-                  }`}>
-                    {student.paymentStatus}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Total Generado:</span>
-                  <span className="font-medium text-gray-900">€{student.totalRevenue}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Clases Pagadas:</span>
-                  <span className="font-medium text-gray-900">{student.classesPaid}</span>
-                </div>
-              </div>
-
-              {/* Next Class Info */}
-              {student.nextClass && (
-                <div className="bg-blue-50 p-3 rounded-lg mb-4">
+              {/* Next Class Info - Summary */}
+              {student.nextClass ? (
+                <div className="bg-blue-50 p-3 rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
-                    <Calendar className="h-4 w-4 text-blue-500" />
+                    <Clock className="h-4 w-4 text-blue-500" />
                     <span className="text-sm font-medium text-blue-700">Próxima Clase</span>
                   </div>
-                  <p className="text-sm text-blue-600">{new Date(student.nextClass).toLocaleDateString('es-ES', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}</p>
+                  <p className="text-sm text-blue-600">
+                    {new Date(student.nextClass).toLocaleDateString('es-ES', { 
+                      weekday: 'short', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })}
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-600">Sin clases programadas</span>
+                  </div>
                 </div>
               )}
-
-              {/* Action Button */}
-              <Button 
-                className="w-full bg-blue-500 hover:bg-blue-600"
-                onClick={() => {
-                  // Aquí iría la lógica para crear una nueva clase
-                  console.log('Crear clase para:', student.name);
-                }}
-              >
-                <Video className="h-4 w-4 mr-2" />
-                Crear Nueva Clase
-              </Button>
             </div>
           </Card>
         ))}
@@ -307,6 +276,209 @@ export const StudentsPage: React.FC = () => {
               >
                 Agregar
               </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* Student Details Modal */}
+      {selectedStudent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b">
+              <div className="flex items-center gap-4">
+                <img
+                  src={selectedStudent.avatar}
+                  alt={selectedStudent.name}
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedStudent.name}</h2>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`px-3 py-1 text-sm rounded-full ${
+                      selectedStudent.status === 'Activo' 
+                        ? 'bg-emerald-100 text-emerald-700' 
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {selectedStudent.status}
+                    </span>
+                    <span className={`px-3 py-1 text-sm rounded-full ${
+                      selectedStudent.paymentStatus === 'Al día' 
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : selectedStudent.paymentStatus === 'Pendiente'
+                        ? 'bg-yellow-100 text-yellow-700'
+                        : 'bg-red-100 text-red-700'
+                    }`}>
+                      {selectedStudent.paymentStatus}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setSelectedStudent(null)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              {/* Contact Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Contacto</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-gray-400" />
+                      <span className="text-gray-700">{selectedStudent.email}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-gray-400" />
+                      <span className="text-gray-700">{selectedStudent.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-5 w-5 text-gray-400" />
+                      <span className="text-gray-700">
+                        Desde: {new Date(selectedStudent.joinDate).toLocaleDateString('es-ES')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Próxima Clase</h3>
+                  {selectedStudent.nextClass ? (
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Clock className="h-5 w-5 text-blue-500" />
+                        <span className="font-medium text-blue-700">
+                          {new Date(selectedStudent.nextClass).toLocaleDateString('es-ES', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </span>
+                      </div>
+                      <Button 
+                        size="sm"
+                        className="bg-blue-500 hover:bg-blue-600"
+                        onClick={() => {
+                          console.log('Unirse a clase:', selectedStudent.name);
+                        }}
+                      >
+                        <Video className="h-4 w-4 mr-2" />
+                        Unirse a Clase
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-gray-600 mb-3">Sin clases programadas</p>
+                      <Button 
+                        size="sm"
+                        className="bg-blue-500 hover:bg-blue-600"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Programar Clase
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Statistics */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Estadísticas</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-gray-50 p-4 rounded-lg text-center">
+                    <p className="text-sm text-gray-600">Clases Completadas</p>
+                    <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesCompleted}</p>
+                  </div>
+                  <div className="bg-blue-50 p-4 rounded-lg text-center">
+                    <p className="text-sm text-gray-600">Clases Restantes</p>
+                    <p className="text-2xl font-bold text-blue-600">{selectedStudent.classesRemaining}</p>
+                  </div>
+                  <div className="bg-emerald-50 p-4 rounded-lg text-center">
+                    <p className="text-sm text-gray-600">Promedio</p>
+                    <div className="flex items-center justify-center gap-1">
+                      <TrendingUp className="h-4 w-4 text-emerald-500" />
+                      <p className="text-2xl font-bold text-emerald-600">{selectedStudent.averageScore}</p>
+                    </div>
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg text-center">
+                    <p className="text-sm text-gray-600">Tareas</p>
+                    <p className="text-2xl font-bold text-purple-600">
+                      {selectedStudent.homeworkCompleted}/{selectedStudent.homeworkCompleted + selectedStudent.homeworkPending}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Information */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Información de Pagos</h3>
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <DollarSign className="h-5 w-5 text-emerald-500" />
+                        <span className="font-medium text-gray-700">Total Generado</span>
+                      </div>
+                      <p className="text-2xl font-bold text-emerald-600">€{selectedStudent.totalRevenue}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Clases Pagadas</p>
+                      <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesPaid}</p>
+                      <p className="text-sm text-gray-500">de {selectedStudent.classesCompleted + selectedStudent.classesRemaining} totales</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Estado</p>
+                      <span className={`inline-block px-3 py-2 text-sm font-medium rounded-lg ${
+                        selectedStudent.paymentStatus === 'Al día' 
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : selectedStudent.paymentStatus === 'Pendiente'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-red-100 text-red-700'
+                      }`}>
+                        {selectedStudent.paymentStatus}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-3">
+                <Button 
+                  className="bg-blue-500 hover:bg-blue-600"
+                  onClick={() => {
+                    console.log('Crear clase para:', selectedStudent.name);
+                  }}
+                >
+                  <Video className="h-4 w-4 mr-2" />
+                  Crear Nueva Clase
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    console.log('Ver historial de:', selectedStudent.name);
+                  }}
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Ver Historial
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    console.log('Editar estudiante:', selectedStudent.name);
+                  }}
+                >
+                  Editar Información
+                </Button>
+              </div>
             </div>
           </Card>
         </div>
