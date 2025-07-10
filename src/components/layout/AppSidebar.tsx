@@ -81,15 +81,18 @@ export function AppSidebar() {
   return (
     <Sidebar className="w-64 border-r bg-white">
       <SidebarHeader className="border-b p-4">
-        <div className="flex items-center gap-3">
+        <button 
+          onClick={() => navigate('/')}
+          className="flex items-center gap-3 w-full hover:bg-gray-50 rounded-lg p-2 -m-2 transition-colors"
+        >
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-emerald-500 text-white font-bold">
             <GraduationCap className="h-6 w-6" />
           </div>
-          <div>
+          <div className="text-left">
             <h2 className="font-bold text-lg text-gray-900">EduTranscribe</h2>
             <p className="text-sm text-gray-500 capitalize">{user.role}</p>
           </div>
-        </div>
+        </button>
       </SidebarHeader>
 
       <SidebarContent className="p-4">
