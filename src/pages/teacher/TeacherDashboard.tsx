@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Users, Calendar, DollarSign, CheckCircle, Clock, BookOpen, FileText, Plus, X, Video, User } from 'lucide-react';
+import { Users, Calendar, DollarSign, CheckCircle, Clock, BookOpen, FileText, Plus, X, Video, User, CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useClasses } from '@/contexts/ClassesContext';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 const stats = [
   {
@@ -100,12 +104,21 @@ export const TeacherDashboard: React.FC = () => {
   const { addClass } = useClasses();
   const [showCreateClass, setShowCreateClass] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState('');
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [classData, setClassData] = useState({
     topic: '',
-    date: '',
     time: '',
     duration: '60',
     notes: ''
+  });
+
+  // Generar opciones de hora (00:00 a 23:00)
+  const timeOptions = Array.from({ length: 24 }, (_, i) => {
+    const hour = i.toString().padStart(2, '0');
+    return {
+      value: `${hour}:00`,
+      label: `${hour}:00`
+    };
   });
 
   const generateMeetingLink = () => {
@@ -116,9 +129,12 @@ export const TeacherDashboard: React.FC = () => {
 
   const handleCreateClass = () => {
     const selectedStudentData = students.find(s => s.id === parseInt(selectedStudent));
-    if (!selectedStudentData) return;
+    if (!selectedStudentData || !selectedDate) return;
     
     const meetingLink = generateMeetingLink();
+    
+    // Formatear la fecha para el contexto
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
     
     // Agregar la clase al contexto
     addClass({
@@ -127,7 +143,7 @@ export const TeacherDashboard: React.FC = () => {
       studentEmail: selectedStudentData.email,
       studentLevel: selectedStudentData.level,
       topic: classData.topic,
-      date: classData.date,
+      date: formattedDate,
       time: classData.time,
       duration: classData.duration,
       status: 'Programada',
@@ -137,9 +153,9 @@ export const TeacherDashboard: React.FC = () => {
     
     // Resetear formulario
     setSelectedStudent('');
+    setSelectedDate(undefined);
     setClassData({
       topic: '',
-      date: '',
       time: '',
       duration: '60',
       notes: ''
@@ -284,16 +300,33 @@ export const TeacherDashboard: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Date */}
                 <div>
-                  <Label htmlFor="date" className="text-sm font-medium text-gray-700 mb-2 block">
+                  <Label className="text-sm font-medium text-gray-700 mb-2 block">
                     Fecha *
                   </Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={classData.date}
-                    onChange={(e) => setClassData({...classData, date: e.target.value})}
-                    className="w-full"
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPPP") : "Selecciona una fecha"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 {/* Time */}
@@ -301,13 +334,19 @@ export const TeacherDashboard: React.FC = () => {
                   <Label htmlFor="time" className="text-sm font-medium text-gray-700 mb-2 block">
                     Hora *
                   </Label>
-                  <Input
+                  <select 
                     id="time"
-                    type="time"
+                    className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={classData.time}
                     onChange={(e) => setClassData({...classData, time: e.target.value})}
-                    className="w-full"
-                  />
+                  >
+                    <option value="">-- Selecciona una hora --</option>
+                    {timeOptions.map((time) => (
+                      <option key={time.value} value={time.value}>
+                        {time.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -385,7 +424,7 @@ export const TeacherDashboard: React.FC = () => {
               <Button 
                 className="flex-1 bg-blue-500 hover:bg-blue-600"
                 onClick={handleCreateClass}
-                disabled={!selectedStudent || !classData.topic || !classData.date || !classData.time}
+                disabled={!selectedStudent || !classData.topic || !selectedDate || !classData.time}
               >
                 <Video className="h-4 w-4 mr-2" />
                 Crear Clase
