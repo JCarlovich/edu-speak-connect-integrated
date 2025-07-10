@@ -714,142 +714,147 @@ export const StudentsPage: React.FC = () => {
 
       {/* Add Student Modal with Class Creation */}
       {showAddStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Plus className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">Agregar Nuevo Estudiante</h2>
-                  <p className="text-sm text-gray-600">Crea un nuevo estudiante y opcionalmente programa su primera clase</p>
-                </div>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => setShowAddStudent(false)}
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Form */}
-            <div className="p-6 space-y-6">
-              {/* Student Information */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Información del Estudiante</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-3xl max-h-[95vh] overflow-y-auto bg-white/95 backdrop-blur-md border-0 shadow-2xl rounded-3xl">
+            <div className="relative">
+              {/* Gradient Header */}
+              <div className="bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 p-8 rounded-t-3xl">
+                <div className="flex items-center justify-between">
                   <div>
-                    <Label htmlFor="studentName" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Nombre completo *
-                    </Label>
-                    <Input
-                      id="studentName"
-                      type="text"
-                      placeholder="Ej: Juan Pérez"
-                      value={studentData.name}
-                      onChange={(e) => setStudentData({...studentData, name: e.target.value})}
-                    />
+                    <h2 className="text-2xl font-bold text-white mb-2">✨ Nuevo Estudiante</h2>
+                    <p className="text-emerald-100">Agrega un nuevo estudiante a tu lista</p>
                   </div>
-                  <div>
-                    <Label htmlFor="studentEmail" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Email *
-                    </Label>
-                    <Input
-                      id="studentEmail"
-                      type="email"
-                      placeholder="juan@email.com"
-                      value={studentData.email}
-                      onChange={(e) => setStudentData({...studentData, email: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="studentPhone" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Teléfono
-                    </Label>
-                    <Input
-                      id="studentPhone"
-                      type="tel"
-                      placeholder="+34 612 345 678"
-                      value={studentData.phone}
-                      onChange={(e) => setStudentData({...studentData, phone: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="studentLevel" className="text-sm font-medium text-gray-700 mb-2 block">
-                      Nivel *
-                    </Label>
-                    <select 
-                      id="studentLevel"
-                      className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      value={studentData.level}
-                      onChange={(e) => setStudentData({...studentData, level: e.target.value})}
-                    >
-                      <option value="Básico">Básico</option>
-                      <option value="Intermedio">Intermedio</option>
-                      <option value="Avanzado">Avanzado</option>
-                    </select>
-                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setShowAddStudent(false)}
+                    className="text-white hover:bg-white/20 rounded-full w-10 h-10 p-0"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
                 </div>
               </div>
 
-              {/* Option to create class */}
-              <div className="border-t pt-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <input
-                    type="checkbox"
-                    id="createClass"
-                    checked={createClassToo}
-                    onChange={(e) => setCreateClassToo(e.target.checked)}
-                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <Label htmlFor="createClass" className="text-sm font-medium text-gray-700">
-                    También programar primera clase
-                  </Label>
-                </div>
-
-                {createClassToo && (
-                  <div className="space-y-4 bg-blue-50 p-4 rounded-lg">
-                    <h4 className="text-md font-semibold text-blue-900">Información de la Clase</h4>
-                    
+              {/* Form Content */}
+              <div className="p-8">
+                <div className="space-y-8">
+                  {/* Student Information Section */}
+                  <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-2xl border border-emerald-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <User className="h-5 w-5 text-emerald-500" />
+                      Información del Estudiante
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Date */}
-                      <div>
-                        <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                          Fecha *
-                        </Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !selectedDate && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {selectedDate ? format(selectedDate, "PPPP") : "Selecciona una fecha"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <CalendarComponent
-                              mode="single"
-                              selected={selectedDate}
-                              onSelect={setSelectedDate}
-                              disabled={(date) => date < new Date()}
-                              initialFocus
-                              className="p-3 pointer-events-auto"
-                            />
-                          </PopoverContent>
-                        </Popover>
+                      <div className="space-y-2">
+                        <Label htmlFor="studentName" className="text-sm font-medium text-gray-700">Nombre Completo *</Label>
+                        <Input
+                          id="studentName"
+                          type="text"
+                          placeholder="Ej: Juan Pérez"
+                          value={studentData.name}
+                          onChange={(e) => setStudentData({...studentData, name: e.target.value})}
+                          className="h-12 rounded-xl border-gray-200 focus:border-emerald-400 focus:ring-emerald-400/20 transition-all"
+                        />
                       </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="studentEmail" className="text-sm font-medium text-gray-700">Email *</Label>
+                        <Input
+                          id="studentEmail"
+                          type="email"
+                          placeholder="juan@email.com"
+                          value={studentData.email}
+                          onChange={(e) => setStudentData({...studentData, email: e.target.value})}
+                          className="h-12 rounded-xl border-gray-200 focus:border-emerald-400 focus:ring-emerald-400/20 transition-all"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="studentPhone" className="text-sm font-medium text-gray-700">Teléfono</Label>
+                        <Input
+                          id="studentPhone"
+                          type="tel"
+                          placeholder="+34 612 345 678"
+                          value={studentData.phone}
+                          onChange={(e) => setStudentData({...studentData, phone: e.target.value})}
+                          className="h-12 rounded-xl border-gray-200 focus:border-emerald-400 focus:ring-emerald-400/20 transition-all"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="studentLevel" className="text-sm font-medium text-gray-700">Nivel *</Label>
+                        <select 
+                          id="studentLevel"
+                          className="w-full h-12 px-4 border border-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-emerald-400/20 focus:border-emerald-400 transition-all"
+                          value={studentData.level}
+                          onChange={(e) => setStudentData({...studentData, level: e.target.value})}
+                        >
+                          <option value="Básico">🟢 Básico</option>
+                          <option value="Intermedio">🟡 Intermedio</option>
+                          <option value="Avanzado">🔴 Avanzado</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
 
-                      {/* Time */}
-                      <div>
-                        <Label htmlFor="classTime" className="text-sm font-medium text-gray-700 mb-2 block">
+                  {/* Option to create class */}
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl border border-blue-100">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Calendar className="h-5 w-5 text-blue-500" />
+                      Primera Clase (Opcional)
+                    </h3>
+                    <div className="flex items-center gap-3 mb-4">
+                      <input
+                        type="checkbox"
+                        id="createClass"
+                        checked={createClassToo}
+                        onChange={(e) => setCreateClassToo(e.target.checked)}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <Label htmlFor="createClass" className="text-sm font-medium text-gray-700">
+                        También programar primera clase
+                      </Label>
+                    </div>
+
+                    {createClassToo && (
+                      <div className="space-y-4 bg-white/70 p-4 rounded-xl border border-blue-200">
+                        <h4 className="text-md font-semibold text-blue-900 flex items-center gap-2">
+                          <BookOpen className="h-4 w-4" />
+                          Información de la Clase
+                        </h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Date */}
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium text-gray-700">
+                              Fecha *
+                            </Label>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  className={cn(
+                                    "w-full h-12 justify-start text-left font-normal rounded-xl border-gray-200 focus:border-blue-400 focus:ring-blue-400/20",
+                                    !selectedDate && "text-muted-foreground"
+                                  )}
+                                >
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {selectedDate ? format(selectedDate, "PPPP") : "Selecciona una fecha"}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <CalendarComponent
+                                  mode="single"
+                                  selected={selectedDate}
+                                  onSelect={setSelectedDate}
+                                  disabled={(date) => date < new Date()}
+                                  initialFocus
+                                  className="p-3 pointer-events-auto"
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+
+                          {/* Time */}
+                          <div className="space-y-2">
+                            <Label htmlFor="classTime" className="text-sm font-medium text-gray-700">
                           Hora *
                         </Label>
                         <select 
@@ -933,29 +938,31 @@ export const StudentsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="flex gap-3 p-6 border-t bg-gray-50">
-              <Button 
-                variant="outline" 
-                className="flex-1"
-                onClick={() => {
-                  setStudentData({ name: '', email: '', phone: '', level: 'Básico' });
-                  setClassData({ topic: '', time: '', duration: '60', notes: '' });
-                  setSelectedDate(undefined);
-                  setCreateClassToo(false);
-                  setShowAddStudent(false);
-                }}
-              >
-                Cancelar
-              </Button>
-              <Button 
-                className="flex-1 bg-blue-500 hover:bg-blue-600"
-                onClick={handleAddStudent}
-                disabled={!studentData.name || !studentData.email || (createClassToo && (!selectedDate || !classData.topic || !classData.time))}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {createClassToo ? 'Crear Estudiante y Clase' : 'Crear Estudiante'}
-              </Button>
+                {/* Actions */}
+                <div className="flex gap-4 mt-8">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 h-12 rounded-xl border-gray-200 hover:bg-gray-50 transition-all"
+                    onClick={() => {
+                      setStudentData({ name: '', email: '', phone: '', level: 'Básico' });
+                      setClassData({ topic: '', time: '', duration: '60', notes: '' });
+                      setSelectedDate(undefined);
+                      setCreateClassToo(false);
+                      setShowAddStudent(false);
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    className="flex-1 h-12 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                    onClick={handleAddStudent}
+                    disabled={!studentData.name || !studentData.email || (createClassToo && (!selectedDate || !classData.topic || !classData.time))}
+                  >
+                    <Plus className="h-5 w-5 mr-2" />
+                    {createClassToo ? 'Crear Estudiante y Clase' : 'Crear Estudiante'}
+                  </Button>
+                </div>
+              </div>
             </div>
           </Card>
         </div>
