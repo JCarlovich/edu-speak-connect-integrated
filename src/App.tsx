@@ -9,6 +9,7 @@ import { DashboardLayout } from './components/layout/DashboardLayout';
 import { LoginPage } from './pages/auth/LoginPage';
 import { TeacherDashboard } from './pages/teacher/TeacherDashboard';
 import { StudentsPage } from './pages/teacher/StudentsPage';
+import { ClassesPage } from './pages/teacher/ClassesPage';
 import { StudentDashboard } from './pages/student/StudentDashboard';
 import NotFound from "./pages/NotFound";
 
@@ -82,14 +83,10 @@ const App = () => (
               </ProtectedRoute>
             } />
             
-            {/* Placeholder routes for future implementation */}
             <Route path="/classes" element={
               <ProtectedRoute allowedRoles={['teacher']}>
                 <DashboardLayout>
-                  <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Gestión de Clases</h2>
-                    <p className="text-gray-600">Esta página se implementará próximamente</p>
-                  </div>
+                  <ClassesPage />
                 </DashboardLayout>
               </ProtectedRoute>
             } />

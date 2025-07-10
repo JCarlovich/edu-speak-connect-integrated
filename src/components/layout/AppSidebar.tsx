@@ -30,7 +30,6 @@ const teacherNavItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
   { title: 'Estudiantes', url: '/students', icon: Users },
   { title: 'Clases', url: '/classes', icon: Calendar },
-  { title: 'Transcripciones', url: '/transcripts', icon: FileText },
 ];
 
 const studentNavItems = [
