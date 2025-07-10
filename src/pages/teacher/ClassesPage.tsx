@@ -38,11 +38,13 @@ export const ClassesPage: React.FC = () => {
   });
 
   const handleAddClass = () => {
+    const generatedLink = `https://meet.google.com/${Math.random().toString(36).substring(2, 15)}`;
     const newClass = {
       ...newClassData,
-      meetingLink: newClassData.meetingLink || `https://meet.google.com/${Math.random().toString(36).substring(2, 15)}`
+      meetingLink: newClassData.meetingLink || generatedLink
     };
     
+    console.log('Creando clase con enlace:', newClass.meetingLink);
     addClass(newClass);
     
     // Reset form
