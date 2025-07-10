@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Calendar, Mail, Phone, BookOpen, BarChart3, Clock, Euro, TrendingUp, CheckCircle2, AlertCircle, Award, Target, Video, X } from 'lucide-react';
+import { Calendar, Mail, Phone, BookOpen, BarChart3, Clock, Euro, TrendingUp, CheckCircle2, AlertCircle, Award, Target, Video, X, Check } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 // Mock data for the current student (this would come from auth context in real app)
 const currentStudent = {
@@ -77,6 +78,16 @@ const currentStudent = {
       status: 'Pendiente',
       score: null,
       type: 'Ensayo'
+    },
+    {
+      id: 3,
+      classId: 2,
+      title: 'Ejercicios de listening',
+      assigned: '2024-03-08',
+      dueDate: '2024-03-16',
+      status: 'Pendiente',
+      score: null,
+      type: 'Audio'
     }
   ],
   summaries: [
@@ -105,6 +116,8 @@ const currentStudent = {
 
 export const StudentProfilePage: React.FC = () => {
   const [imageError, setImageError] = useState(false);
+  const [homework, setHomework] = useState(currentStudent.homework);
+  const { toast } = useToast();
 
   const getInitials = (name: string) => {
     return name
@@ -149,6 +162,30 @@ export const StudentProfilePage: React.FC = () => {
   const joinClass = () => {
     window.open(currentStudent.nextClass.meetingLink, '_blank');
   };
+
+  const toggleHomeworkStatus = (homeworkId: number) => {
+    setHomework(prev => prev.map(hw => {
+      if (hw.id === homeworkId) {
+        const newStatus = hw.status === 'Completado' ? 'Pendiente' : 'Completado';
+        const newScore = newStatus === 'Completado' ? (hw.score || 8.0) : null;
+        
+        toast({
+          title: newStatus === 'Completado' ? "¡Deber completado!" : "Deber marcado como pendiente",
+          description: `${hw.title} ha sido marcado como ${newStatus.toLowerCase()}`,
+        });
+        
+        return {
+          ...hw,
+          status: newStatus,
+          score: newScore
+        };
+      }
+      return hw;
+    }));
+  };
+
+  const completedHomework = homework.filter(hw => hw.status === 'Completado').length;
+  const pendingHomework = homework.filter(hw => hw.status === 'Pendiente').length;
 
   return (
     <div className="space-y-6">
@@ -236,7 +273,7 @@ export const StudentProfilePage: React.FC = () => {
                 </Card>
                 <Card className="p-6 text-center">
                   <h4 className="text-sm font-medium text-gray-600 mb-2">Tareas</h4>
-                  <p className="text-3xl font-bold text-purple-600">{currentStudent.homeworkCompleted}/{currentStudent.homeworkCompleted + currentStudent.homeworkPending}</p>
+                  <p className="text-3xl font-bold text-purple-600">{completedHomework}/{completedHomework + pendingHomework}</p>
                 </Card>
               </div>
             </div>
@@ -284,16 +321,40 @@ export const StudentProfilePage: React.FC = () => {
             <Card className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Deberes Asignados</h3>
               <div className="space-y-4">
-                {currentStudent.homework.map((hw) => (
+                {homework.map((hw) => (
                   <div key={hw.id} className="p-4 border border-gray-200 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-3">
                       <h4 className="font-semibold text-gray-900">{hw.title}</h4>
-                      <Badge 
-                        variant={hw.status === 'Completado' ? "default" : "destructive"}
-                        className={hw.status === 'Completado' ? "bg-emerald-100 text-emerald-800" : "bg-orange-100 text-orange-800"}
-                      >
-                        {hw.status}
-                      </Badge>
+                      <div className="flex items-center gap-3">
+                        <Badge 
+                          variant={hw.status === 'Completado' ? "default" : "destructive"}
+                          className={hw.status === 'Completado' ? "bg-emerald-100 text-emerald-800" : "bg-orange-100 text-orange-800"}
+                        >
+                          {hw.status}
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant={hw.status === 'Completado' ? "outline" : "default"}
+                          onClick={() => toggleHomeworkStatus(hw.id)}
+                          className={`transition-all duration-200 ${
+                            hw.status === 'Completado' 
+                              ? 'hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200' 
+                              : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                          }`}
+                        >
+                          {hw.status === 'Completado' ? (
+                            <>
+                              <X className="h-4 w-4 mr-1" />
+                              Marcar Pendiente
+                            </>
+                          ) : (
+                            <>
+                              <Check className="h-4 w-4 mr-1" />
+                              Marcar Completado
+                            </>
+                          )}
+                        </Button>
+                      </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm text-gray-600">
                       <div>
