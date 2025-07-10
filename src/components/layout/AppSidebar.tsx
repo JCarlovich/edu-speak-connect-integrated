@@ -39,10 +39,6 @@ const teacherNavItems = [
 
 const studentNavItems = [
   { title: 'Dashboard', url: '/student', icon: LayoutDashboard },
-  { title: 'Mis Clases', url: '/student/classes', icon: Calendar },
-  { title: 'Deberes', url: '/student/homework', icon: BookOpen },
-  { title: 'Progreso', url: '/student/progress', icon: BarChart3 },
-  { title: 'Materiales', url: '/student/materials', icon: FileText },
 ];
 
 export function AppSidebar() {
