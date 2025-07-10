@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -168,34 +168,68 @@ export const ClassesPage: React.FC = () => {
                     {/* Status Controls */}
                     <div className="space-y-3 mb-4">
                       <div>
-                        <label className="text-xs font-medium text-gray-600 block mb-1">Estado de la clase</label>
+                        <label className="text-xs font-medium text-muted-foreground block mb-1">Estado de la clase</label>
                         <Select 
                           value={cls.status} 
                           onValueChange={(value) => updateClass(cls.id, { status: value })}
                         >
-                          <SelectTrigger className="h-8 text-xs">
-                            <SelectValue />
+                          <SelectTrigger className="h-9 text-sm bg-background border-input hover:bg-accent hover:text-accent-foreground transition-colors">
+                            <div className="flex items-center gap-2">
+                              {cls.status === 'Programada' && <Clock className="h-3.5 w-3.5 text-blue-500" />}
+                              {cls.status === 'Completada' && <CheckCircle className="h-3.5 w-3.5 text-green-500" />}
+                              {cls.status === 'No Realizada' && <XCircle className="h-3.5 w-3.5 text-red-500" />}
+                              <SelectValue />
+                            </div>
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Programada">Programada</SelectItem>
-                            <SelectItem value="Completada">Completada</SelectItem>
-                            <SelectItem value="No Realizada">No Realizada</SelectItem>
+                          <SelectContent className="min-w-[200px]">
+                            <SelectItem value="Programada" className="cursor-pointer">
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-3.5 w-3.5 text-blue-500" />
+                                <span>Programada</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="Completada" className="cursor-pointer">
+                              <div className="flex items-center gap-2">
+                                <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+                                <span>Completada</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="No Realizada" className="cursor-pointer">
+                              <div className="flex items-center gap-2">
+                                <XCircle className="h-3.5 w-3.5 text-red-500" />
+                                <span>No Realizada</span>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       
                       <div>
-                        <label className="text-xs font-medium text-gray-600 block mb-1">Estado de pago</label>
+                        <label className="text-xs font-medium text-muted-foreground block mb-1">Estado de pago</label>
                         <Select 
                           value={cls.paymentStatus} 
                           onValueChange={(value) => updateClass(cls.id, { paymentStatus: value })}
                         >
-                          <SelectTrigger className="h-8 text-xs">
-                            <SelectValue />
+                          <SelectTrigger className="h-9 text-sm bg-background border-input hover:bg-accent hover:text-accent-foreground transition-colors">
+                            <div className="flex items-center gap-2">
+                              {cls.paymentStatus === 'Pagado' && <CircleDollarSign className="h-3.5 w-3.5 text-green-500" />}
+                              {cls.paymentStatus === 'No Pagado' && <CreditCard className="h-3.5 w-3.5 text-orange-500" />}
+                              <SelectValue />
+                            </div>
                           </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Pagado">Pagado</SelectItem>
-                            <SelectItem value="No Pagado">No Pagado</SelectItem>
+                          <SelectContent className="min-w-[200px]">
+                            <SelectItem value="Pagado" className="cursor-pointer">
+                              <div className="flex items-center gap-2">
+                                <CircleDollarSign className="h-3.5 w-3.5 text-green-500" />
+                                <span>Pagado</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="No Pagado" className="cursor-pointer">
+                              <div className="flex items-center gap-2">
+                                <CreditCard className="h-3.5 w-3.5 text-orange-500" />
+                                <span>No Pagado</span>
+                              </div>
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
