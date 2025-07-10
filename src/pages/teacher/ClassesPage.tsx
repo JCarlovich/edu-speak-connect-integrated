@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon, BookOpen } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon, BookOpen, Copy, Link } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -124,6 +124,16 @@ export const ClassesPage: React.FC = () => {
   };
 
   const groupedClasses = groupClassesByDate(filteredClasses);
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      // Aquí podrías agregar una notificación toast si quieres
+      console.log('Enlace copiado al portapapeles');
+    } catch (err) {
+      console.error('Error al copiar:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
@@ -276,13 +286,22 @@ export const ClassesPage: React.FC = () => {
                       {/* Actions */}
                       <div className="flex gap-3">
                         {cls.meetingLink ? (
-                          <Button 
-                            className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
-                            onClick={() => window.open(cls.meetingLink, '_blank')}
-                          >
-                            <Video className="h-5 w-5 mr-2" />
-                            Unirse
-                          </Button>
+                          <>
+                            <Button 
+                              className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                              onClick={() => window.open(cls.meetingLink, '_blank')}
+                            >
+                              <Video className="h-5 w-5 mr-2" />
+                              Unirse
+                            </Button>
+                            <Button 
+                              variant="outline"
+                              className="px-4 bg-white/90 hover:bg-white border-emerald-200 hover:border-emerald-300 text-emerald-600 rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                              onClick={() => copyToClipboard(cls.meetingLink)}
+                            >
+                              <Copy className="h-5 w-5" />
+                            </Button>
+                          </>
                         ) : (
                           <Button 
                             className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
