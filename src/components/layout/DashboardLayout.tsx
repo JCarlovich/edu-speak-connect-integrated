@@ -32,9 +32,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                 <Bell className="h-5 w-5 text-gray-600" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <Settings className="h-5 w-5 text-gray-600" />
-              </button>
             </div>
           </header>
 
