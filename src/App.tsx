@@ -15,6 +15,7 @@ import { ProfilePage } from './pages/teacher/ProfilePage';
 import { SettingsPage } from './pages/teacher/SettingsPage';
 import { BillingPage } from './pages/teacher/BillingPage';
 import { StudentDashboard } from './pages/student/StudentDashboard';
+import { StudentProfilePage } from './pages/student/StudentProfilePage';
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -83,7 +84,7 @@ const App = () => (
               <Route path="/student" element={
                 <ProtectedRoute allowedRoles={['student']}>
                   <DashboardLayout>
-                    <StudentDashboard />
+                    <StudentProfilePage />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
