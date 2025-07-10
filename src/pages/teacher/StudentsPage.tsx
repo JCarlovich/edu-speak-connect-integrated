@@ -969,13 +969,37 @@ export const StudentsPage: React.FC = () => {
                                 <TableCell>{cls.duration}</TableCell>
                                 <TableCell className="font-medium">€{cls.amount}</TableCell>
                                 <TableCell>
-                                  <span className={`px-2 py-1 text-xs rounded-full ${
-                                    cls.paid 
-                                      ? "bg-emerald-100 text-emerald-700"
-                                      : "bg-red-100 text-red-700"
-                                  }`}>
-                                    {cls.paid ? "Pagado" : "Pendiente"}
-                                  </span>
+                                  <button 
+                                    onClick={() => {
+                                      // Toggle payment status
+                                      const updatedClasses = selectedStudent.classes.map((c: any) => 
+                                        c.id === cls.id ? { ...c, paid: !c.paid } : c
+                                      );
+                                      setSelectedStudent({
+                                        ...selectedStudent,
+                                        classes: updatedClasses
+                                      });
+                                    }}
+                                    className={`px-3 py-1 text-xs rounded-full transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                                      cls.paid 
+                                        ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 focus:ring-emerald-400" 
+                                        : "bg-red-100 text-red-700 hover:bg-red-200 focus:ring-red-400"
+                                    }`}
+                                  >
+                                    <span className="flex items-center gap-1">
+                                      {cls.paid ? (
+                                        <>
+                                          <CheckCircle2 className="h-3 w-3" />
+                                          Pagado
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Clock className="h-3 w-3" />
+                                          Pendiente
+                                        </>
+                                      )}
+                                    </span>
+                                  </button>
                                 </TableCell>
                               </TableRow>
                             ))}
