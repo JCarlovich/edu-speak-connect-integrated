@@ -1,11 +1,17 @@
 
 import React, { useState } from 'react';
-import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video, X, Clock, FileText, CheckCircle2, AlertCircle, CalendarIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useClasses } from '@/contexts/ClassesContext';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 const students = [
   {
@@ -294,9 +300,76 @@ const students = [
 ];
 
 export const StudentsPage: React.FC = () => {
+  const { addClass } = useClasses();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddStudent, setShowAddStudent] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  
+  // Estados para el formulario de agregar estudiante + clase
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [createClassToo, setCreateClassToo] = useState(false);
+  const [studentData, setStudentData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    level: 'Básico'
+  });
+  const [classData, setClassData] = useState({
+    topic: '',
+    time: '',
+    duration: '60',
+    notes: ''
+  });
+
+  // Generar opciones de hora (00:00 a 23:00)
+  const timeOptions = Array.from({ length: 24 }, (_, i) => {
+    const hour = i.toString().padStart(2, '0');
+    return {
+      value: `${hour}:00`,
+      label: `${hour}:00`
+    };
+  });
+
+  const generateMeetingLink = () => {
+    const randomId = Math.random().toString(36).substring(2, 15);
+    return `https://meet.google.com/${randomId}`;
+  };
+
+  const handleAddStudent = () => {
+    // Crear el estudiante (aquí normalmente se haría una llamada a la API)
+    console.log('Nuevo estudiante:', studentData);
+    
+    // Si también quiere crear una clase
+    if (createClassToo && selectedDate && classData.topic && classData.time) {
+      const meetingLink = generateMeetingLink();
+      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+      
+      addClass({
+        studentName: studentData.name,
+        studentAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face', // Avatar por defecto
+        studentEmail: studentData.email,
+        studentLevel: studentData.level,
+        topic: classData.topic,
+        date: formattedDate,
+        time: classData.time,
+        duration: classData.duration,
+        status: 'Programada',
+        meetingLink: meetingLink,
+        notes: classData.notes || ''
+      });
+      
+      alert(`Estudiante agregado y clase programada exitosamente!\nLink de reunión: ${meetingLink}`);
+    } else {
+      alert('Estudiante agregado exitosamente!');
+    }
+    
+    // Resetear formulario
+    setStudentData({ name: '', email: '', phone: '', level: 'Básico' });
+    setClassData({ topic: '', time: '', duration: '60', notes: '' });
+    setSelectedDate(undefined);
+    setCreateClassToo(false);
+    setShowAddStudent(false);
+  };
 
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -433,57 +506,249 @@ export const StudentsPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Add Student Modal (Simple version) */}
+      {/* Add Student Modal with Class Creation */}
       {showAddStudent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="p-6 w-full max-w-md mx-4">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Agregar Nuevo Estudiante</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre completo
-                </label>
-                <Input type="text" placeholder="Ej: Juan Pérez" />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Plus className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Agregar Nuevo Estudiante</h2>
+                  <p className="text-sm text-gray-600">Crea un nuevo estudiante y opcionalmente programa su primera clase</p>
+                </div>
               </div>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowAddStudent(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+
+            {/* Form */}
+            <div className="p-6 space-y-6">
+              {/* Student Information */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <Input type="email" placeholder="juan@email.com" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Información del Estudiante</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="studentName" className="text-sm font-medium text-gray-700 mb-2 block">
+                      Nombre completo *
+                    </Label>
+                    <Input
+                      id="studentName"
+                      type="text"
+                      placeholder="Ej: Juan Pérez"
+                      value={studentData.name}
+                      onChange={(e) => setStudentData({...studentData, name: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="studentEmail" className="text-sm font-medium text-gray-700 mb-2 block">
+                      Email *
+                    </Label>
+                    <Input
+                      id="studentEmail"
+                      type="email"
+                      placeholder="juan@email.com"
+                      value={studentData.email}
+                      onChange={(e) => setStudentData({...studentData, email: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="studentPhone" className="text-sm font-medium text-gray-700 mb-2 block">
+                      Teléfono
+                    </Label>
+                    <Input
+                      id="studentPhone"
+                      type="tel"
+                      placeholder="+34 612 345 678"
+                      value={studentData.phone}
+                      onChange={(e) => setStudentData({...studentData, phone: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="studentLevel" className="text-sm font-medium text-gray-700 mb-2 block">
+                      Nivel *
+                    </Label>
+                    <select 
+                      id="studentLevel"
+                      className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      value={studentData.level}
+                      onChange={(e) => setStudentData({...studentData, level: e.target.value})}
+                    >
+                      <option value="Básico">Básico</option>
+                      <option value="Intermedio">Intermedio</option>
+                      <option value="Avanzado">Avanzado</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Teléfono
-                </label>
-                <Input type="tel" placeholder="+34 612 345 678" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Nivel
-                </label>
-                <select className="w-full p-2 border border-gray-300 rounded-md">
-                  <option value="Básico">Básico</option>
-                  <option value="Intermedio">Intermedio</option>
-                  <option value="Avanzado">Avanzado</option>
-                </select>
+
+              {/* Option to create class */}
+              <div className="border-t pt-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <input
+                    type="checkbox"
+                    id="createClass"
+                    checked={createClassToo}
+                    onChange={(e) => setCreateClassToo(e.target.checked)}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <Label htmlFor="createClass" className="text-sm font-medium text-gray-700">
+                    También programar primera clase
+                  </Label>
+                </div>
+
+                {createClassToo && (
+                  <div className="space-y-4 bg-blue-50 p-4 rounded-lg">
+                    <h4 className="text-md font-semibold text-blue-900">Información de la Clase</h4>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Date */}
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                          Fecha *
+                        </Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !selectedDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {selectedDate ? format(selectedDate, "PPPP") : "Selecciona una fecha"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <CalendarComponent
+                              mode="single"
+                              selected={selectedDate}
+                              onSelect={setSelectedDate}
+                              disabled={(date) => date < new Date()}
+                              initialFocus
+                              className="p-3 pointer-events-auto"
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      {/* Time */}
+                      <div>
+                        <Label htmlFor="classTime" className="text-sm font-medium text-gray-700 mb-2 block">
+                          Hora *
+                        </Label>
+                        <select 
+                          id="classTime"
+                          className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          value={classData.time}
+                          onChange={(e) => setClassData({...classData, time: e.target.value})}
+                        >
+                          <option value="">-- Selecciona una hora --</option>
+                          {timeOptions.map((time) => (
+                            <option key={time.value} value={time.value}>
+                              {time.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Topic */}
+                    <div>
+                      <Label htmlFor="classTopic" className="text-sm font-medium text-gray-700 mb-2 block">
+                        Tema de la Clase *
+                      </Label>
+                      <Input
+                        id="classTopic"
+                        type="text"
+                        placeholder="Ej: Clase introductoria, Evaluación de nivel"
+                        value={classData.topic}
+                        onChange={(e) => setClassData({...classData, topic: e.target.value})}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Duration */}
+                      <div>
+                        <Label htmlFor="classDuration" className="text-sm font-medium text-gray-700 mb-2 block">
+                          Duración (minutos) *
+                        </Label>
+                        <select 
+                          id="classDuration"
+                          className="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          value={classData.duration}
+                          onChange={(e) => setClassData({...classData, duration: e.target.value})}
+                        >
+                          <option value="30">30 minutos</option>
+                          <option value="45">45 minutos</option>
+                          <option value="60">60 minutos</option>
+                          <option value="90">90 minutos</option>
+                        </select>
+                      </div>
+
+                      {/* Notes */}
+                      <div>
+                        <Label htmlFor="classNotes" className="text-sm font-medium text-gray-700 mb-2 block">
+                          Notas
+                        </Label>
+                        <Input
+                          id="classNotes"
+                          type="text"
+                          placeholder="Objetivos, preparación, etc."
+                          value={classData.notes}
+                          onChange={(e) => setClassData({...classData, notes: e.target.value})}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Info Box */}
+                    <div className="bg-emerald-50 p-3 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <Video className="h-4 w-4 text-emerald-600 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium text-emerald-800">Link de Videollamada</p>
+                          <p className="text-sm text-emerald-700">
+                            Se generará automáticamente un enlace cuando crees la clase.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="flex gap-2 mt-6">
+
+            {/* Footer */}
+            <div className="flex gap-3 p-6 border-t bg-gray-50">
               <Button 
                 variant="outline" 
                 className="flex-1"
-                onClick={() => setShowAddStudent(false)}
+                onClick={() => {
+                  setStudentData({ name: '', email: '', phone: '', level: 'Básico' });
+                  setClassData({ topic: '', time: '', duration: '60', notes: '' });
+                  setSelectedDate(undefined);
+                  setCreateClassToo(false);
+                  setShowAddStudent(false);
+                }}
               >
                 Cancelar
               </Button>
               <Button 
                 className="flex-1 bg-blue-500 hover:bg-blue-600"
-                onClick={() => {
-                  // Aquí iría la lógica para agregar el estudiante
-                  setShowAddStudent(false);
-                }}
+                onClick={handleAddStudent}
+                disabled={!studentData.name || !studentData.email || (createClassToo && (!selectedDate || !classData.topic || !classData.time))}
               >
-                Agregar
+                <Plus className="h-4 w-4 mr-2" />
+                {createClassToo ? 'Crear Estudiante y Clase' : 'Crear Estudiante'}
               </Button>
             </div>
           </Card>
