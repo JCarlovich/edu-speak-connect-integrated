@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Users, 
@@ -48,8 +48,14 @@ const studentNavItems = [
 export function AppSidebar() {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setIsProfileOpen(false);
+  };
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -156,18 +162,27 @@ export function AppSidebar() {
 
               {/* Menu Options */}
               <div className="py-2">
-                <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={() => handleNavigate('/profile')}
+                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
                   <UserCircle className="h-4 w-4 text-gray-500" />
                   <span>Mi Perfil</span>
                 </button>
                 
-                <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={() => handleNavigate('/settings')}
+                  className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
                   <Settings className="h-4 w-4 text-gray-500" />
                   <span>Configuración</span>
                 </button>
                 
                 {user.role === 'teacher' && (
-                  <button className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                  <button 
+                    onClick={() => handleNavigate('/billing')}
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
                     <CreditCard className="h-4 w-4 text-gray-500" />
                     <span>Facturación</span>
                   </button>

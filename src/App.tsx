@@ -11,6 +11,9 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { TeacherDashboard } from './pages/teacher/TeacherDashboard';
 import { StudentsPage } from './pages/teacher/StudentsPage';
 import { ClassesPage } from './pages/teacher/ClassesPage';
+import { ProfilePage } from './pages/teacher/ProfilePage';
+import { SettingsPage } from './pages/teacher/SettingsPage';
+import { BillingPage } from './pages/teacher/BillingPage';
 import { StudentDashboard } from './pages/student/StudentDashboard';
 import NotFound from "./pages/NotFound";
 
@@ -89,6 +92,30 @@ const App = () => (
                 <ProtectedRoute allowedRoles={['teacher']}>
                   <DashboardLayout>
                     <ClassesPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/profile" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <ProfilePage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/settings" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <SettingsPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/billing" element={
+                <ProtectedRoute allowedRoles={['teacher']}>
+                  <DashboardLayout>
+                    <BillingPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />
