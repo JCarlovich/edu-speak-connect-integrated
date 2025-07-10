@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Search, Mail, Phone, Calendar, MoreVertical } from 'lucide-react';
+import { Plus, Search, Mail, Phone, Calendar, MoreVertical, DollarSign, BookOpen, TrendingUp, Video } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,16 @@ const students = [
     level: 'Intermedio',
     joinDate: '2024-01-15',
     classesCompleted: 12,
+    classesPaid: 10,
+    classesRemaining: 3,
+    totalRevenue: 450,
+    averageScore: 8.5,
+    lastClass: '2024-03-10',
+    nextClass: '2024-03-15',
+    homeworkCompleted: 8,
+    homeworkPending: 2,
     status: 'Activo',
+    paymentStatus: 'Al día',
     avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
   },
   {
@@ -25,7 +34,16 @@ const students = [
     level: 'Avanzado',
     joinDate: '2023-11-20',
     classesCompleted: 28,
+    classesPaid: 30,
+    classesRemaining: 2,
+    totalRevenue: 1200,
+    averageScore: 9.2,
+    lastClass: '2024-03-08',
+    nextClass: '2024-03-14',
+    homeworkCompleted: 25,
+    homeworkPending: 1,
     status: 'Activo',
+    paymentStatus: 'Al día',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
   },
   {
@@ -36,7 +54,16 @@ const students = [
     level: 'Básico',
     joinDate: '2024-02-01',
     classesCompleted: 8,
+    classesPaid: 8,
+    classesRemaining: 0,
+    totalRevenue: 320,
+    averageScore: 7.8,
+    lastClass: '2024-03-05',
+    nextClass: '2024-03-16',
+    homeworkCompleted: 6,
+    homeworkPending: 3,
     status: 'Activo',
+    paymentStatus: 'Pendiente',
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
   },
   {
@@ -47,7 +74,16 @@ const students = [
     level: 'Intermedio',
     joinDate: '2023-12-10',
     classesCompleted: 15,
+    classesPaid: 12,
+    classesRemaining: 5,
+    totalRevenue: 480,
+    averageScore: 6.9,
+    lastClass: '2024-02-28',
+    nextClass: null,
+    homeworkCompleted: 10,
+    homeworkPending: 0,
     status: 'Inactivo',
+    paymentStatus: 'Atrasado',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
   },
 ];
@@ -136,17 +172,84 @@ export const StudentsPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Statistics Grid */}
             <div className="mt-4 pt-4 border-t border-gray-100">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-600">Nivel</p>
-                  <p className="font-medium text-gray-900">{student.level}</p>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Clases Completadas</p>
+                  <p className="text-lg font-bold text-gray-900">{student.classesCompleted}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-600">Clases</p>
-                  <p className="font-medium text-gray-900">{student.classesCompleted}</p>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Clases Restantes</p>
+                  <p className="text-lg font-bold text-blue-600">{student.classesRemaining}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Promedio</p>
+                  <div className="flex items-center justify-center gap-1">
+                    <TrendingUp className="h-3 w-3 text-emerald-500" />
+                    <p className="text-lg font-bold text-emerald-600">{student.averageScore}</p>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">Tareas</p>
+                  <p className="text-lg font-bold text-purple-600">{student.homeworkCompleted}/{student.homeworkCompleted + student.homeworkPending}</p>
                 </div>
               </div>
+
+              {/* Payment Info */}
+              <div className="bg-gray-50 p-3 rounded-lg mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-emerald-500" />
+                    <span className="text-sm font-medium text-gray-700">Estado de Pago</span>
+                  </div>
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    student.paymentStatus === 'Al día' 
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : student.paymentStatus === 'Pendiente'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-red-100 text-red-700'
+                  }`}>
+                    {student.paymentStatus}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Generado:</span>
+                  <span className="font-medium text-gray-900">€{student.totalRevenue}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Clases Pagadas:</span>
+                  <span className="font-medium text-gray-900">{student.classesPaid}</span>
+                </div>
+              </div>
+
+              {/* Next Class Info */}
+              {student.nextClass && (
+                <div className="bg-blue-50 p-3 rounded-lg mb-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Calendar className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm font-medium text-blue-700">Próxima Clase</span>
+                  </div>
+                  <p className="text-sm text-blue-600">{new Date(student.nextClass).toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</p>
+                </div>
+              )}
+
+              {/* Action Button */}
+              <Button 
+                className="w-full bg-blue-500 hover:bg-blue-600"
+                onClick={() => {
+                  // Aquí iría la lógica para crear una nueva clase
+                  console.log('Crear clase para:', student.name);
+                }}
+              >
+                <Video className="h-4 w-4 mr-2" />
+                Crear Nueva Clase
+              </Button>
             </div>
           </Card>
         ))}
