@@ -389,6 +389,24 @@ export const StudentsPage: React.FC = () => {
     setShowAddStudent(false);
   };
 
+  // Calculate dynamic payment information
+  const calculatePaymentInfo = (student: any) => {
+    if (!student.classes) return { totalRevenue: 0, classesPaid: 0, totalClasses: 0, paymentStatus: 'Al día' };
+    
+    const paidClasses = student.classes.filter((cls: any) => cls.paid);
+    const totalRevenue = paidClasses.reduce((sum: number, cls: any) => sum + cls.amount, 0);
+    const classesPaid = paidClasses.length;
+    const totalClasses = student.classes.length;
+    const pendingClasses = student.classes.filter((cls: any) => !cls.paid);
+    
+    let paymentStatus = 'Al día';
+    if (pendingClasses.length > 0) {
+      paymentStatus = 'Pendiente';
+    }
+    
+    return { totalRevenue, classesPaid, totalClasses, paymentStatus };
+  };
+
   // Check for student parameter in URL and auto-open modal
   useEffect(() => {
     const studentName = searchParams.get('student');
@@ -953,23 +971,23 @@ export const StudentsPage: React.FC = () => {
                             <DollarSign className="h-5 w-5 text-emerald-500" />
                             <span className="font-medium text-gray-700">Total Generado</span>
                           </div>
-                          <p className="text-2xl font-bold text-emerald-600">€{selectedStudent.totalRevenue}</p>
+                          <p className="text-2xl font-bold text-emerald-600">€{calculatePaymentInfo(selectedStudent).totalRevenue}</p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-600 mb-2">Clases Pagadas</p>
-                          <p className="text-2xl font-bold text-gray-900">{selectedStudent.classesPaid}</p>
-                          <p className="text-sm text-gray-500">de {selectedStudent.classesCompleted + selectedStudent.classesRemaining} totales</p>
+                          <p className="text-2xl font-bold text-gray-900">{calculatePaymentInfo(selectedStudent).classesPaid}</p>
+                          <p className="text-sm text-gray-500">de {calculatePaymentInfo(selectedStudent).totalClasses} totales</p>
                         </div>
                         <div>
                           <p className="text-sm text-gray-600 mb-2">Estado</p>
                           <span className={`inline-block px-3 py-2 text-sm font-medium rounded-lg ${
-                            selectedStudent.paymentStatus === "Al día" 
+                            calculatePaymentInfo(selectedStudent).paymentStatus === "Al día" 
                               ? "bg-emerald-100 text-emerald-700"
-                              : selectedStudent.paymentStatus === "Pendiente"
+                              : calculatePaymentInfo(selectedStudent).paymentStatus === "Pendiente"
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-red-100 text-red-700"
                           }`}>
-                            {selectedStudent.paymentStatus}
+                            {calculatePaymentInfo(selectedStudent).paymentStatus}
                           </span>
                         </div>
                       </div>
