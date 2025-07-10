@@ -24,7 +24,7 @@ const RoleBasedRedirect = () => {
     return <Navigate to="/login" replace />;
   }
   
-  return <Navigate to={user.role === 'teacher' ? '/' : '/student'} replace />;
+  return <Navigate to={user.role === 'teacher' ? '/classes' : '/student'} replace />;
 };
 
 // Main dashboard component that renders based on user role
@@ -35,7 +35,7 @@ const Dashboard = () => {
     return <Navigate to="/login" replace />;
   }
   
-  return user.role === 'teacher' ? <TeacherDashboard /> : <StudentDashboard />;
+  return user.role === 'teacher' ? <ClassesPage /> : <StudentDashboard />;
 };
 
 const App = () => (
@@ -52,9 +52,9 @@ const App = () => (
               
               {/* Protected Routes with Dashboard Layout */}
               <Route path="/" element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={['teacher']}>
                   <DashboardLayout>
-                    <Dashboard />
+                    <ClassesPage />
                   </DashboardLayout>
                 </ProtectedRoute>
               } />

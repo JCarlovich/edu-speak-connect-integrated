@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon, BookOpen, Copy, Link } from 'lucide-react';
+import { Calendar, Clock, Users, Video, Plus, Search, Filter, MoreVertical, User, CheckCircle, AlertCircle, XCircle, CreditCard, CircleDollarSign, X, CalendarIcon, BookOpen, Copy, Link, DollarSign } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -211,16 +211,24 @@ export const ClassesPage: React.FC = () => {
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     endOfMonth.setHours(23, 59, 59, 999);
     
-    // Filter only scheduled classes
+    // Filter classes by status
     const scheduledClasses = classes.filter(cls => cls.status === 'Programada');
+    const completedClasses = classes.filter(cls => cls.status === 'Completada');
+    const paidClasses = classes.filter(cls => cls.paymentStatus === 'Pagado');
     
+    // Count unique students with scheduled classes
+    const uniqueStudents = new Set(scheduledClasses.map(cls => cls.studentName)).size;
+    
+    // Classes today
     const classesToday = scheduledClasses.filter(cls => cls.date === todayStr).length;
     
+    // Classes this week
     const classesThisWeek = scheduledClasses.filter(cls => {
       const classDate = new Date(cls.date);
       return classDate >= startOfWeek && classDate <= endOfWeek;
     }).length;
     
+    // Classes this month
     const classesThisMonth = scheduledClasses.filter(cls => {
       const classDate = new Date(cls.date);
       return classDate >= startOfMonth && classDate <= endOfMonth;
@@ -229,7 +237,12 @@ export const ClassesPage: React.FC = () => {
     return {
       today: classesToday,
       week: classesThisWeek,
-      month: classesThisMonth
+      month: classesThisMonth,
+      totalStudents: uniqueStudents,
+      totalScheduled: scheduledClasses.length,
+      totalCompleted: completedClasses.length,
+      totalPaid: paidClasses.length,
+      paymentRate: classes.length > 0 ? Math.round((paidClasses.length / classes.length) * 100) : 0
     };
   };
 
@@ -256,35 +269,19 @@ export const ClassesPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* KPIs Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      {/* KPIs Section - Ampliada con métricas del dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
-          <div className="p-6 relative">
-            <div className="absolute top-4 right-4 opacity-20">
-              <Calendar className="h-8 w-8" />
-            </div>
-            <div className="relative z-10">
-              <p className="text-blue-100 text-sm font-medium mb-1">Clases Hoy</p>
-              <p className="text-3xl font-bold">{kpis.today}</p>
-              <div className="flex items-center gap-2 mt-2">
-                <Clock className="h-4 w-4 text-blue-200" />
-                <span className="text-blue-100 text-xs">Fecha actual</span>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
           <div className="p-6 relative">
             <div className="absolute top-4 right-4 opacity-20">
               <Users className="h-8 w-8" />
             </div>
             <div className="relative z-10">
-              <p className="text-purple-100 text-sm font-medium mb-1">Clases Esta Semana</p>
-              <p className="text-3xl font-bold">{kpis.week}</p>
+              <p className="text-blue-100 text-sm font-medium mb-1">Estudiantes Activos</p>
+              <p className="text-3xl font-bold">{kpis.totalStudents}</p>
               <div className="flex items-center gap-2 mt-2">
-                <Calendar className="h-4 w-4 text-purple-200" />
-                <span className="text-purple-100 text-xs">Lun - Dom</span>
+                <User className="h-4 w-4 text-blue-200" />
+                <span className="text-blue-100 text-xs">Con clases programadas</span>
               </div>
             </div>
           </div>
@@ -293,14 +290,46 @@ export const ClassesPage: React.FC = () => {
         <Card className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
           <div className="p-6 relative">
             <div className="absolute top-4 right-4 opacity-20">
-              <CalendarIcon className="h-8 w-8" />
+              <Calendar className="h-8 w-8" />
             </div>
             <div className="relative z-10">
-              <p className="text-emerald-100 text-sm font-medium mb-1">Clases Este Mes</p>
-              <p className="text-3xl font-bold">{kpis.month}</p>
+              <p className="text-emerald-100 text-sm font-medium mb-1">Clases Programadas</p>
+              <p className="text-3xl font-bold">{kpis.totalScheduled}</p>
               <div className="flex items-center gap-2 mt-2">
-                <Calendar className="h-4 w-4 text-emerald-200" />
-                <span className="text-emerald-100 text-xs">Mes completo</span>
+                <Clock className="h-4 w-4 text-emerald-200" />
+                <span className="text-emerald-100 text-xs">{kpis.week} esta semana</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <DollarSign className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-purple-100 text-sm font-medium mb-1">Clases Pagadas</p>
+              <p className="text-3xl font-bold">{kpis.totalPaid}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <CircleDollarSign className="h-4 w-4 text-purple-200" />
+                <span className="text-purple-100 text-xs">{kpis.paymentRate}% del total</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden">
+          <div className="p-6 relative">
+            <div className="absolute top-4 right-4 opacity-20">
+              <CheckCircle className="h-8 w-8" />
+            </div>
+            <div className="relative z-10">
+              <p className="text-orange-100 text-sm font-medium mb-1">Clases Completadas</p>
+              <p className="text-3xl font-bold">{kpis.totalCompleted}</p>
+              <div className="flex items-center gap-2 mt-2">
+                <Calendar className="h-4 w-4 text-orange-200" />
+                <span className="text-orange-100 text-xs">Total histórico</span>
               </div>
             </div>
           </div>

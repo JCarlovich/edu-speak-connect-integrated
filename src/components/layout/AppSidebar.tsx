@@ -27,9 +27,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 
 const teacherNavItems = [
-  { title: 'Dashboard', url: '/', icon: LayoutDashboard },
+  { title: 'Clases', url: '/', icon: Calendar },
   { title: 'Estudiantes', url: '/students', icon: Users },
-  { title: 'Clases', url: '/classes', icon: Calendar },
 ];
 
 const studentNavItems = [
