@@ -187,7 +187,7 @@ export const ClassesPage: React.FC = () => {
     );
   };
 
-  // Calculate KPIs
+  // Calculate KPIs - only for scheduled classes
   const calculateKPIs = () => {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD format
@@ -211,14 +211,17 @@ export const ClassesPage: React.FC = () => {
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     endOfMonth.setHours(23, 59, 59, 999);
     
-    const classesToday = classes.filter(cls => cls.date === todayStr).length;
+    // Filter only scheduled classes
+    const scheduledClasses = classes.filter(cls => cls.status === 'Programada');
     
-    const classesThisWeek = classes.filter(cls => {
+    const classesToday = scheduledClasses.filter(cls => cls.date === todayStr).length;
+    
+    const classesThisWeek = scheduledClasses.filter(cls => {
       const classDate = new Date(cls.date);
       return classDate >= startOfWeek && classDate <= endOfWeek;
     }).length;
     
-    const classesThisMonth = classes.filter(cls => {
+    const classesThisMonth = scheduledClasses.filter(cls => {
       const classDate = new Date(cls.date);
       return classDate >= startOfMonth && classDate <= endOfMonth;
     }).length;
