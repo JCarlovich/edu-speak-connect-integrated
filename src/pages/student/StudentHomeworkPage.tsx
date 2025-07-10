@@ -90,12 +90,12 @@ export const StudentHomeworkPage: React.FC = () => {
   const toggleHomeworkStatus = (homeworkId: number) => {
     setHomework(prev => prev.map(hw => {
       if (hw.id === homeworkId) {
-        const newStatus = hw.status === 'Completado' ? 'Pendiente' : 'Completado';
-        const newScore = newStatus === 'Completado' ? (hw.score || 8.0) : null;
+        const newStatus = 'Completado';
+        const newScore = 8.0;
         
         toast({
-          title: newStatus === 'Completado' ? "¡Deber completado!" : "Deber marcado como pendiente",
-          description: `${hw.title} ha sido marcado como ${newStatus.toLowerCase()}`,
+          title: "¡Deber completado!",
+          description: `${hw.title} ha sido marcado como completado`,
         });
         
         return {
@@ -189,34 +189,22 @@ export const StudentHomeworkPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-semibold text-gray-900">{hw.title}</h4>
                     <div className="flex items-center gap-3">
-                      <Badge 
-                        variant={hw.status === 'Completado' ? "default" : "destructive"}
-                        className={hw.status === 'Completado' ? "bg-emerald-100 text-emerald-800" : "bg-orange-100 text-orange-800"}
-                      >
-                        {hw.status}
-                      </Badge>
-                      <Button
-                        size="sm"
-                        variant={hw.status === 'Completado' ? "outline" : "default"}
-                        onClick={() => toggleHomeworkStatus(hw.id)}
-                        className={`transition-all duration-200 animate-fade-in ${
-                          hw.status === 'Completado' 
-                            ? 'hover:bg-orange-50 hover:text-orange-600 hover:border-orange-200' 
-                            : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                      <button
+                        onClick={() => hw.status === 'Pendiente' && toggleHomeworkStatus(hw.id)}
+                        className={`transition-all duration-200 ${
+                          hw.status === 'Pendiente' 
+                            ? 'cursor-pointer hover:scale-105 hover:shadow-md' 
+                            : 'cursor-default'
                         }`}
+                        disabled={hw.status === 'Completado'}
                       >
-                        {hw.status === 'Completado' ? (
-                          <>
-                            <X className="h-4 w-4 mr-1" />
-                            Marcar Pendiente
-                          </>
-                        ) : (
-                          <>
-                            <Check className="h-4 w-4 mr-1" />
-                            Marcar Completado
-                          </>
-                        )}
-                      </Button>
+                        <Badge 
+                          variant={hw.status === 'Completado' ? "default" : "destructive"}
+                          className={`${hw.status === 'Completado' ? "bg-emerald-100 text-emerald-800" : "bg-orange-100 text-orange-800 hover:bg-orange-200"} transition-colors`}
+                        >
+                          {hw.status}
+                        </Badge>
+                      </button>
                     </div>
                   </div>
                   
