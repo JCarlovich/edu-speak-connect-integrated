@@ -166,83 +166,39 @@ export const ClassesPage: React.FC = () => {
                     </div>
 
                     {/* Status Controls */}
-                    <div className="space-y-3 mb-4">
-                      <div>
-                        <label className="text-xs font-medium text-muted-foreground block mb-1">Estado de la clase</label>
-                        <Select 
-                          value={cls.status} 
-                          onValueChange={(value) => updateClass(cls.id, { status: value })}
-                        >
-                          <SelectTrigger className="h-9 text-sm bg-background border-input hover:bg-accent hover:text-accent-foreground transition-colors">
-                            <div className="flex items-center gap-2">
-                              {cls.status === 'Programada' && <Clock className="h-3.5 w-3.5 text-blue-500" />}
-                              {cls.status === 'Completada' && <CheckCircle className="h-3.5 w-3.5 text-green-500" />}
-                              {cls.status === 'No Realizada' && <XCircle className="h-3.5 w-3.5 text-red-500" />}
-                              <SelectValue />
-                            </div>
-                          </SelectTrigger>
-                          <SelectContent className="min-w-[200px]">
-                            <SelectItem value="Programada" className="cursor-pointer">
-                              <div className="flex items-center gap-2">
-                                <Clock className="h-3.5 w-3.5 text-blue-500" />
-                                <span>Programada</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="Completada" className="cursor-pointer">
-                              <div className="flex items-center gap-2">
-                                <CheckCircle className="h-3.5 w-3.5 text-green-500" />
-                                <span>Completada</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="No Realizada" className="cursor-pointer">
-                              <div className="flex items-center gap-2">
-                                <XCircle className="h-3.5 w-3.5 text-red-500" />
-                                <span>No Realizada</span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <label className="text-xs font-medium text-muted-foreground block mb-1">Estado de pago</label>
-                        <Select 
-                          value={cls.paymentStatus} 
-                          onValueChange={(value) => updateClass(cls.id, { paymentStatus: value })}
-                        >
-                          <SelectTrigger className="h-9 text-sm bg-background border-input hover:bg-accent hover:text-accent-foreground transition-colors">
-                            <div className="flex items-center gap-2">
-                              {cls.paymentStatus === 'Pagado' && <CircleDollarSign className="h-3.5 w-3.5 text-green-500" />}
-                              {cls.paymentStatus === 'No Pagado' && <CreditCard className="h-3.5 w-3.5 text-orange-500" />}
-                              <SelectValue />
-                            </div>
-                          </SelectTrigger>
-                          <SelectContent className="min-w-[200px]">
-                            <SelectItem value="Pagado" className="cursor-pointer">
-                              <div className="flex items-center gap-2">
-                                <CircleDollarSign className="h-3.5 w-3.5 text-green-500" />
-                                <span>Pagado</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="No Pagado" className="cursor-pointer">
-                              <div className="flex items-center gap-2">
-                                <CreditCard className="h-3.5 w-3.5 text-orange-500" />
-                                <span>No Pagado</span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    {/* Status Badges */}
                     <div className="flex gap-2 mb-4">
-                      <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(cls.status)}`}>
-                        {cls.status}
-                      </span>
-                      <span className={`px-2 py-1 text-xs rounded-full ${getPaymentColor(cls.paymentStatus)}`}>
-                        {cls.paymentStatus}
-                      </span>
+                      <button
+                        onClick={() => {
+                          const statuses = ['Programada', 'Completada', 'No Realizada'];
+                          const currentIndex = statuses.indexOf(cls.status);
+                          const nextStatus = statuses[(currentIndex + 1) % statuses.length];
+                          updateClass(cls.id, { status: nextStatus });
+                        }}
+                        className={`px-3 py-1.5 text-xs rounded-full font-medium transition-all hover:scale-105 cursor-pointer ${getStatusColor(cls.status)} hover:shadow-sm`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          {cls.status === 'Programada' && <Clock className="h-3 w-3" />}
+                          {cls.status === 'Completada' && <CheckCircle className="h-3 w-3" />}
+                          {cls.status === 'No Realizada' && <XCircle className="h-3 w-3" />}
+                          {cls.status}
+                        </div>
+                      </button>
+                      
+                      <button
+                        onClick={() => {
+                          const paymentStatuses = ['No Pagado', 'Pagado'];
+                          const currentIndex = paymentStatuses.indexOf(cls.paymentStatus);
+                          const nextStatus = paymentStatuses[(currentIndex + 1) % paymentStatuses.length];
+                          updateClass(cls.id, { paymentStatus: nextStatus });
+                        }}
+                        className={`px-3 py-1.5 text-xs rounded-full font-medium transition-all hover:scale-105 cursor-pointer ${getPaymentColor(cls.paymentStatus)} hover:shadow-sm`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          {cls.paymentStatus === 'Pagado' && <CircleDollarSign className="h-3 w-3" />}
+                          {cls.paymentStatus === 'No Pagado' && <CreditCard className="h-3 w-3" />}
+                          {cls.paymentStatus}
+                        </div>
+                      </button>
                     </div>
 
                     {/* Actions */}
