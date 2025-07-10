@@ -126,11 +126,11 @@ export const ClassesPage: React.FC = () => {
   const groupedClasses = groupClassesByDate(filteredClasses);
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Clases Programadas
           </h1>
           <p className="text-gray-600">
@@ -138,7 +138,7 @@ export const ClassesPage: React.FC = () => {
           </p>
         </div>
         <Button 
-          className="bg-blue-500 hover:bg-blue-600"
+          className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-6 py-3"
           onClick={() => setShowNewClassModal(true)}
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -147,29 +147,31 @@ export const ClassesPage: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            type="text"
-            placeholder="Buscar por estudiante o tema..."
-            className="pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-400" />
-          <select 
-            className="p-2 border border-gray-300 rounded-md bg-white"
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-          >
-            <option value="Todas">Todas</option>
-            <option value="Programada">Programadas</option>
-            <option value="Completada">Completadas</option>
-            <option value="No Realizada">No Realizadas</option>
-          </select>
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Buscar por estudiante o tema..."
+              className="pl-12 h-12 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-blue-400/20 transition-all"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <Filter className="h-5 w-5 text-gray-400" />
+            <select 
+              className="px-4 py-3 border border-gray-200 rounded-xl bg-white/90 hover:border-blue-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all min-w-[140px]"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              <option value="Todas">Todas</option>
+              <option value="Programada">Programadas</option>
+              <option value="Completada">Completadas</option>
+              <option value="No Realizada">No Realizadas</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -183,106 +185,116 @@ export const ClassesPage: React.FC = () => {
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {classes.map((cls) => (
-                  <Card key={cls.id} className="p-6 hover:shadow-lg transition-shadow">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={cls.studentAvatar}
-                          alt={cls.studentName}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <div>
-                          <h3 
-                            className="font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors"
-                            onClick={() => navigate(`/students?student=${encodeURIComponent(cls.studentName)}`)}
-                          >
-                            {cls.studentName}
-                          </h3>
-                          <span className="text-sm text-gray-600">{cls.studentLevel}</span>
+                  <Card key={cls.id} className="group relative overflow-hidden bg-white/70 backdrop-blur-sm rounded-3xl border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:bg-white/90">
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <div className="relative p-8">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                          <div className="relative">
+                            <img
+                              src={cls.studentAvatar}
+                              alt={cls.studentName}
+                              className="w-14 h-14 rounded-2xl object-cover ring-2 ring-white shadow-md"
+                            />
+                            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-emerald-400 to-blue-400 rounded-full flex items-center justify-center">
+                              <User className="h-3 w-3 text-white" />
+                            </div>
+                          </div>
+                          <div>
+                            <h3 
+                              className="font-bold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors text-lg"
+                              onClick={() => navigate(`/students?student=${encodeURIComponent(cls.studentName)}`)}
+                            >
+                              {cls.studentName}
+                            </h3>
+                            <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">{cls.studentLevel}</span>
+                          </div>
                         </div>
-                      </div>
-                      <Button variant="ghost" size="sm">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    {/* Class Info */}
-                    <div className="space-y-3 mb-4">
-                      <div>
-                        <h4 className="font-medium text-gray-900">{cls.topic}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{cls.notes}</p>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          <span>{cls.time}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          <span>{cls.duration} min</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Status Controls */}
-                    <div className="flex gap-2 mb-4">
-                      <button
-                        onClick={() => {
-                          const statuses = ['Programada', 'Completada', 'No Realizada'];
-                          const currentIndex = statuses.indexOf(cls.status);
-                          const nextStatus = statuses[(currentIndex + 1) % statuses.length];
-                          updateClass(cls.id, { status: nextStatus });
-                        }}
-                        className={`px-3 py-1.5 text-xs rounded-full font-medium transition-all hover:scale-105 cursor-pointer ${getStatusColor(cls.status)} hover:shadow-sm`}
-                      >
-                        <div className="flex items-center gap-1.5">
-                          {cls.status === 'Programada' && <Clock className="h-3 w-3" />}
-                          {cls.status === 'Completada' && <CheckCircle className="h-3 w-3" />}
-                          {cls.status === 'No Realizada' && <XCircle className="h-3 w-3" />}
-                          {cls.status}
-                        </div>
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          const paymentStatuses = ['No Pagado', 'Pagado'];
-                          const currentIndex = paymentStatuses.indexOf(cls.paymentStatus);
-                          const nextStatus = paymentStatuses[(currentIndex + 1) % paymentStatuses.length];
-                          updateClass(cls.id, { paymentStatus: nextStatus });
-                        }}
-                        className={`px-3 py-1.5 text-xs rounded-full font-medium transition-all hover:scale-105 cursor-pointer ${getPaymentColor(cls.paymentStatus)} hover:shadow-sm`}
-                      >
-                        <div className="flex items-center gap-1.5">
-                          {cls.paymentStatus === 'Pagado' && <CircleDollarSign className="h-3 w-3" />}
-                          {cls.paymentStatus === 'No Pagado' && <CreditCard className="h-3 w-3" />}
-                          {cls.paymentStatus}
-                        </div>
-                      </button>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2">
-                      {cls.meetingLink ? (
-                        <Button 
-                          className="flex-1 bg-emerald-500 hover:bg-emerald-600"
-                          onClick={() => window.open(cls.meetingLink, '_blank')}
-                        >
-                          <Video className="h-4 w-4 mr-2" />
-                          Unirse
+                        <Button variant="ghost" size="sm" className="rounded-full hover:bg-gray-100">
+                          <MoreVertical className="h-4 w-4" />
                         </Button>
-                      ) : (
-                        <Button 
-                          className="flex-1 bg-blue-500 hover:bg-blue-600"
+                      </div>
+
+                      {/* Class Info */}
+                      <div className="space-y-4 mb-6">
+                        <div className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-2xl p-4">
+                          <h4 className="font-bold text-gray-900 text-lg mb-2">{cls.topic}</h4>
+                          <p className="text-sm text-gray-600 leading-relaxed">{cls.notes}</p>
+                        </div>
+                        
+                        <div className="flex items-center gap-6 text-sm text-gray-600">
+                          <div className="flex items-center gap-2 bg-white/50 px-3 py-2 rounded-xl">
+                            <Clock className="h-4 w-4 text-blue-500" />
+                            <span className="font-medium">{cls.time}</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white/50 px-3 py-2 rounded-xl">
+                            <Calendar className="h-4 w-4 text-purple-500" />
+                            <span className="font-medium">{cls.duration} min</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Status Controls */}
+                      <div className="flex gap-3 mb-6">
+                        <button
                           onClick={() => {
-                            console.log('Confirmar clase:', cls.id);
+                            const statuses = ['Programada', 'Completada', 'No Realizada'];
+                            const currentIndex = statuses.indexOf(cls.status);
+                            const nextStatus = statuses[(currentIndex + 1) % statuses.length];
+                            updateClass(cls.id, { status: nextStatus });
                           }}
+                          className={`flex-1 px-4 py-2.5 text-xs rounded-2xl font-bold transition-all duration-300 hover:scale-105 cursor-pointer shadow-sm hover:shadow-md ${getStatusColor(cls.status)}`}
                         >
-                          <Calendar className="h-4 w-4 mr-2" />
-                          Confirmar
-                        </Button>
-                      )}
+                          <div className="flex items-center justify-center gap-2">
+                            {cls.status === 'Programada' && <Clock className="h-3 w-3" />}
+                            {cls.status === 'Completada' && <CheckCircle className="h-3 w-3" />}
+                            {cls.status === 'No Realizada' && <XCircle className="h-3 w-3" />}
+                            {cls.status}
+                          </div>
+                        </button>
+                        
+                        <button
+                          onClick={() => {
+                            const paymentStatuses = ['No Pagado', 'Pagado'];
+                            const currentIndex = paymentStatuses.indexOf(cls.paymentStatus);
+                            const nextStatus = paymentStatuses[(currentIndex + 1) % paymentStatuses.length];
+                            updateClass(cls.id, { paymentStatus: nextStatus });
+                          }}
+                          className={`flex-1 px-4 py-2.5 text-xs rounded-2xl font-bold transition-all duration-300 hover:scale-105 cursor-pointer shadow-sm hover:shadow-md ${getPaymentColor(cls.paymentStatus)}`}
+                        >
+                          <div className="flex items-center justify-center gap-2">
+                            {cls.paymentStatus === 'Pagado' && <CircleDollarSign className="h-3 w-3" />}
+                            {cls.paymentStatus === 'No Pagado' && <CreditCard className="h-3 w-3" />}
+                            {cls.paymentStatus}
+                          </div>
+                        </button>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex gap-3">
+                        {cls.meetingLink ? (
+                          <Button 
+                            className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                            onClick={() => window.open(cls.meetingLink, '_blank')}
+                          >
+                            <Video className="h-5 w-5 mr-2" />
+                            Unirse
+                          </Button>
+                        ) : (
+                          <Button 
+                            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl h-12 font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                            onClick={() => {
+                              console.log('Confirmar clase:', cls.id);
+                            }}
+                          >
+                            <Calendar className="h-5 w-5 mr-2" />
+                            Confirmar
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </Card>
                 ))}
