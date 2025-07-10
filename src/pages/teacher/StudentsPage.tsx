@@ -389,6 +389,65 @@ export const StudentsPage: React.FC = () => {
     setShowAddStudent(false);
   };
 
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .slice(0, 2)
+      .join('');
+  };
+
+  // Avatar component with fallback to initials
+  const StudentAvatar = ({ student, size = 'md' }: { student: any, size?: 'sm' | 'md' | 'lg' }) => {
+    const [imageError, setImageError] = useState(false);
+    
+    const sizeClasses = {
+      sm: 'w-12 h-12',
+      md: 'w-16 h-16', 
+      lg: 'w-20 h-20'
+    };
+    
+    const textSizes = {
+      sm: 'text-sm',
+      md: 'text-lg',
+      lg: 'text-xl'
+    };
+    
+    if (!student.avatar || imageError) {
+      const initials = getInitials(student.name);
+      const colors = [
+        'from-blue-400 to-blue-600',
+        'from-purple-400 to-purple-600', 
+        'from-pink-400 to-pink-600',
+        'from-green-400 to-green-600',
+        'from-orange-400 to-orange-600',
+        'from-red-400 to-red-600',
+        'from-indigo-400 to-indigo-600',
+        'from-teal-400 to-teal-600'
+      ];
+      
+      // Use name hash to consistently pick same color for same student
+      const colorIndex = student.name.length % colors.length;
+      const gradientClass = colors[colorIndex];
+      
+      return (
+        <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-br ${gradientClass} flex items-center justify-center ring-2 ring-white shadow-md`}>
+          <span className={`text-white font-bold ${textSizes[size]}`}>{initials}</span>
+        </div>
+      );
+    }
+
+    return (
+      <img
+        src={student.avatar}
+        alt={student.name}
+        className={`${sizeClasses[size]} rounded-full object-cover ring-2 ring-white shadow-md`}
+        onError={() => setImageError(true)}
+      />
+    );
+  };
+
   // Calculate dynamic payment information
   const calculatePaymentInfo = (student: any) => {
     if (!student.classes) return { totalRevenue: 0, classesPaid: 0, totalClasses: 0, paymentStatus: 'Al día' };
@@ -477,11 +536,7 @@ export const StudentsPage: React.FC = () => {
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <img
-                  src={student.avatar}
-                  alt={student.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <StudentAvatar student={student} size="sm" />
                 <div>
                   <h3 className="font-semibold text-gray-900">{student.name}</h3>
                   <span className={`inline-block px-2 py-1 text-xs rounded-full ${
@@ -820,11 +875,7 @@ export const StudentsPage: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b">
               <div className="flex items-center gap-4">
-                <img
-                  src={selectedStudent.avatar}
-                  alt={selectedStudent.name}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
+                <StudentAvatar student={selectedStudent} size="lg" />
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">{selectedStudent.name}</h2>
                   <div className="flex items-center gap-2 mt-1">
