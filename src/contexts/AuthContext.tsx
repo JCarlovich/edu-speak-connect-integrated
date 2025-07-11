@@ -51,11 +51,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Check if we have a token
       const token = localStorage.getItem('auth_token');
       if (!token) {
-        // Try to load from old storage as fallback
-        const storedUser = localStorage.getItem('eduTranscribe_user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
+        // No token means no authenticated user
+        setUser(null);
         setIsLoading(false);
         return;
       }
@@ -80,15 +77,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error: any) {
       console.error('❌ Auth check failed:', error);
-      // Clear invalid token and try fallback
+      // Clear invalid token
       localStorage.removeItem('auth_token');
-      
-      // Fallback to stored user
-      const storedUser = localStorage.getItem('eduTranscribe_user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-        console.log('🔄 Using stored user as fallback');
-      }
+      localStorage.removeItem('eduTranscribe_user');
+      setUser(null);
+      console.log('🔄 Invalid token, user logged out');
     } finally {
       setIsLoading(false);
     }
