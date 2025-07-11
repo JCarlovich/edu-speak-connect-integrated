@@ -108,8 +108,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userData: User = {
           id: data.session.user.id,
           email: data.session.user.email,
-          role: data.session.user.user_metadata?.role || (email.includes('teacher') ? 'teacher' : 'student'),
-          name: data.session.user.user_metadata?.name || data.session.user.email.split('@')[0],
+          role: data.user?.role || data.session.user.user_metadata?.role || (email.includes('teacher') ? 'teacher' : 'student'),
+          name: data.session.user.user_metadata?.full_name || data.session.user.user_metadata?.name || data.session.user.email.split('@')[0],
           avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${data.session.user.email}`
         };
         
