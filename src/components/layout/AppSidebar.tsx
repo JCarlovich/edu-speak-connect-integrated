@@ -70,11 +70,7 @@ export function AppSidebar() {
   
   if (!user) return null;
 
-  console.log('🔍 AppSidebar user role:', user.role);
-  console.log('🔍 AppSidebar complete user:', user);
-  
   const navItems = user.role === 'teacher' ? teacherNavItems : studentNavItems;
-  console.log('🔍 Selected navItems:', navItems);
   
   const getNavClassName = ({ isActive }: { isActive: boolean }) =>
     isActive ? 'bg-blue-100 text-blue-900 font-medium' : 'hover:bg-gray-100';

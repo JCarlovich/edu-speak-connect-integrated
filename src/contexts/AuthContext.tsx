@@ -63,8 +63,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await api.auth.me();
       
       if (data.user) {
-        console.log('🔍 /me endpoint response:', data.user);
-        
         const userData: User = {
           id: data.user.id,
           email: data.user.email,
@@ -72,9 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: data.user.full_name || data.user.email.split('@')[0],
           avatar: data.user.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${data.user.email}`
         };
-        
-        console.log('🎯 /me final userData role:', userData.role);
-        console.log('🎯 /me complete userData:', userData);
         
         setUser(userData);
         localStorage.setItem('eduTranscribe_user', JSON.stringify(userData));
@@ -103,10 +98,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (data.session?.user) {
         // Backend login successful
-        console.log('🔍 Backend response data:', data);
-        console.log('🔍 data.user?.role:', data.user?.role);
-        console.log('🔍 data.session.user.user_metadata?.role:', data.session.user.user_metadata?.role);
-        
         const userData: User = {
           id: data.session.user.id,
           email: data.session.user.email,
@@ -114,9 +105,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: data.session.user.user_metadata?.full_name || data.session.user.user_metadata?.name || data.session.user.email.split('@')[0],
           avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${data.session.user.email}`
         };
-        
-        console.log('🎯 Final userData role:', userData.role);
-        console.log('🎯 Complete userData:', userData);
         
         setUser(userData);
         localStorage.setItem('auth_token', data.session.access_token);
