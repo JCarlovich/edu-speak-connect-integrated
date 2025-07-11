@@ -17,6 +17,7 @@ import { useSearchParams } from 'react-router-dom';
 const students = [
   {
     id: 1,
+    studentId: 'STU-240315-K8M',
     name: 'Ana Martínez',
     email: 'ana.martinez@email.com',
     phone: '+34 612 345 678',
@@ -107,6 +108,7 @@ const students = [
   },
   {
     id: 2,
+    studentId: 'STU-231120-P9X',
     name: 'Carlos López',
     email: 'carlos.lopez@email.com',
     phone: '+34 623 456 789',
@@ -169,6 +171,7 @@ const students = [
   },
   {
     id: 3,
+    studentId: 'STU-240201-L7Q',
     name: 'María González',
     email: 'maria.gonzalez@email.com',
     phone: '+34 634 567 890',
@@ -249,6 +252,7 @@ const students = [
   },
   {
     id: 4,
+    studentId: 'STU-231210-M3R',
     name: 'Pedro Ruiz',
     email: 'pedro.ruiz@email.com',
     phone: '+34 645 678 901',
@@ -364,9 +368,20 @@ export const StudentsPage: React.FC = () => {
     return `https://meet.google.com/${randomId}`;
   };
 
+  // Generar ID único para estudiante
+  const generateStudentId = () => {
+    const prefix = 'STU';
+    const timestamp = Date.now().toString().slice(-6); // Últimos 6 dígitos del timestamp
+    const random = Math.random().toString(36).substring(2, 5).toUpperCase(); // 3 caracteres aleatorios
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
   const handleAddStudent = () => {
+    // Generar ID único para el estudiante
+    const studentId = generateStudentId();
+    
     // Crear el estudiante (aquí normalmente se haría una llamada a la API)
-    console.log('Nuevo estudiante:', studentData);
+    console.log('Nuevo estudiante:', { ...studentData, studentId });
     
     // Si también quiere crear una clase
     if (createClassToo && selectedDate && classData.topic && classData.time) {
@@ -388,9 +403,9 @@ export const StudentsPage: React.FC = () => {
         notes: classData.notes || ''
       });
       
-      alert(`Estudiante agregado y clase programada exitosamente!\nLink de reunión: ${meetingLink}`);
+      alert(`¡Estudiante agregado exitosamente!\n\n📋 ID del Estudiante: ${studentId}\n\n⚠️ IMPORTANTE: Proporciona este ID al estudiante para que pueda registrarse en la plataforma.\n\n🎓 Clase programada con enlace: ${meetingLink}`);
     } else {
-      alert('Estudiante agregado exitosamente!');
+      alert(`¡Estudiante agregado exitosamente!\n\n📋 ID del Estudiante: ${studentId}\n\n⚠️ IMPORTANTE: Proporciona este ID al estudiante para que pueda registrarse en la plataforma.`);
     }
     
     // Resetear formulario
@@ -643,6 +658,39 @@ export const StudentsPage: React.FC = () => {
 
               {/* Contact Info */}
               <div className="space-y-3 mb-6">
+                {/* Student ID - Solo visible para profesores */}
+                <div className="flex items-center gap-3 text-gray-600 hover:text-indigo-600 transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                    <Users className="h-4 w-4 text-indigo-500" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-sm font-mono bg-indigo-50 px-2 py-1 rounded text-indigo-700">
+                      {student.studentId}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 hover:bg-indigo-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigator.clipboard.writeText(student.studentId);
+                      // Mostrar feedback visual
+                      const button = e.currentTarget;
+                      const originalContent = button.innerHTML;
+                      button.innerHTML = '✓';
+                      button.classList.add('text-green-600');
+                      setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.classList.remove('text-green-600');
+                      }, 1000);
+                    }}
+                    title="Copiar ID del estudiante"
+                  >
+                    📋
+                  </Button>
+                </div>
+                
                 <div className="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors">
                   <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
                     <Mail className="h-4 w-4 text-blue-500" />
@@ -1040,6 +1088,27 @@ export const StudentsPage: React.FC = () => {
                         <div className="flex items-center gap-3">
                           <BookOpen className="h-5 w-5 text-gray-400" />
                           <span className="text-gray-700">Nivel: {selectedStudent.level}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Users className="h-5 w-5 text-indigo-500" />
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-700">ID: </span>
+                            <span className="font-mono bg-indigo-50 px-2 py-1 rounded text-indigo-700 text-sm">
+                              {selectedStudent.studentId}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-indigo-100"
+                              onClick={() => {
+                                navigator.clipboard.writeText(selectedStudent.studentId);
+                                // Mostrar feedback visual
+                              }}
+                              title="Copiar ID del estudiante"
+                            >
+                              📋
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
